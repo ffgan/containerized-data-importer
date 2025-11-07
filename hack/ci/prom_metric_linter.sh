@@ -50,7 +50,7 @@ json_output=$(_out/prom-metrics-collector 2>/dev/null)
 source "${PROJECT_ROOT}"/hack/build/common.sh
 
 # Run the linter by using the prom-metrics-linter Docker container
-errors=$($CDI_CRI run -i "quay.io/kubevirt/prom-metrics-linter:$linter_image_tag" \
+errors=$($CDI_CRI run -i "ghcr.io/ffgan/prom-metrics-linter:main@sha256:7eb5cdf843e86712a8476ae5ab62c0261efeb1a551d4ffd073f96caae1015d29" \
     --metric-families="$json_output" \
     --operator-name="$operator_name" \
     --sub-operator-name="$sub_operator_name" 2>/dev/null)
