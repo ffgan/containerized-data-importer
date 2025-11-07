@@ -5,7 +5,7 @@
 # Container images are built with buildah 
 
 CONTAINER_DISK_IMAGE=${CONTAINER_DISK_IMAGE:-quay.io/kubevirt/container-disk-v1alpha}
-ARCHITECTURES="${ARCHITECTURES:-amd64,arm64,s390x}"
+ARCHITECTURES="${ARCHITECTURES:-amd64,arm64,s390x,riscv64}"
 : "${MULTIARCH_IMAGES:=tinycoreqcow2}"
 MULTIARCH_IMAGES=($MULTIARCH_IMAGES)
 

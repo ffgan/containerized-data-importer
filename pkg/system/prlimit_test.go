@@ -43,7 +43,7 @@ var _ = Describe("Process Limits", func() {
 	realLimits := &ProcessLimitValues{1 << 30, 10}
 
 	//workaround for issue #3341 and #3467
-	if runtime.GOARCH == "s390x" || runtime.GOARCH == "arm64" {
+	if runtime.GOARCH == "s390x" || runtime.GOARCH == "arm64" || runtime.GOARCH == "riscv64" {
 		realLimits = &ProcessLimitValues{1 << 31, 10}
 	}
 

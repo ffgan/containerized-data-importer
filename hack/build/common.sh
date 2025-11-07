@@ -64,8 +64,17 @@ function format_archname() {
             fi
             echo ${arch}
             ;;
+        crossbuild-riscv64 | riscv64)
+            [[ $tag ]] && echo "riscv64" && return
+            if [ ${local_platform} != "riscv64" ]; then
+                arch="crossbuild-riscv64"
+            else
+                arch="riscv64"
+            fi
+            echo ${arch}
+            ;;
         *)
-            echo "ERROR: invalid Arch, ${platform}, only support x86_64, aarch64 and s390x"
+            echo "ERROR: invalid Arch, ${platform}, only support x86_64, aarch64, riscv64 and s390x"
             exit 1
             ;;
         esac

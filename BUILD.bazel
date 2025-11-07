@@ -3,7 +3,8 @@ load("@io_bazel_rules_docker//container:container.bzl", "container_image")
 load("@bazel_gazelle//:def.bzl", "gazelle")
 load("@bazel_tools//tools/python:toolchain.bzl", "py_runtime_pair")
 load("@bazeldnf//:def.bzl", "bazeldnf")
-load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
+# load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
 
 py_runtime(
     name = "python2_runtime",
@@ -103,6 +104,23 @@ container_bundle(
     },
 )
 
+container_bundle(
+    name = "test-container-images-riscv64",
+    images = {
+        "$(container_prefix)/cdi-func-test-bad-webserver:$(container_tag)": "//tools/cdi-func-test-bad-webserver:cdi-func-test-bad-webserver-image",
+        "$(container_prefix)/cdi-func-test-proxy:$(container_tag)": "//tools/cdi-func-test-proxy:cdi-func-test-proxy-image",
+        "$(container_prefix)/cdi-func-test-sample-populator:$(container_tag)": "//tools/cdi-func-test-sample-populator:cdi-func-test-sample-populator-image",
+        "$(container_prefix)/cdi-func-test-file-host-init:$(container_tag)": "//tools/cdi-func-test-file-host-init:cdi-func-test-file-host-init-image",
+        "$(container_prefix)/cdi-func-test-file-host-http:$(container_tag)": "//tools/cdi-func-test-file-host-init:cdi-func-test-file-host-http-image",
+        "$(container_prefix)/cdi-func-test-registry-init:$(container_tag)": "//tools/cdi-func-test-registry-init:cdi-func-test-registry-init-image",
+        "$(container_prefix)/cdi-func-test-tinycore:$(container_tag)": "//tests:cdi-func-test-tinycore",
+        "$(container_prefix)/cdi-func-test-registry-populate:$(container_tag)": "//tools/cdi-func-test-registry-init:cdi-func-test-registry-populate-image",
+        "$(container_prefix)/cdi-func-test-registry:$(container_tag)": "//tools/cdi-func-test-registry-init:cdi-func-test-registry-image",
+        "$(container_prefix)/vcenter-simulator:$(container_tag)": "//tools/vddk-test:vcenter-simulator",
+    },
+)
+
+
 load("@io_bazel_rules_docker//contrib:push-all.bzl", "docker_push")
 
 
@@ -112,6 +130,7 @@ alias(
     actual = select({
         "@io_bazel_rules_go//go/platform:linux_s390x":":test-container-images-s390x",
         "@io_bazel_rules_go//go/platform:linux_arm64":":test-container-images-aarch64",
+        "@io_bazel_rules_go//go/platform:linux_riscv64":":test-container-images-riscv64",
         "//conditions:default":  ":test-container-images-amd64",
     })
 )
@@ -219,6 +238,9 @@ container_image(
         "@io_bazel_rules_go//go/platform:linux_arm64": [
             "//rpm:testimage_aarch64",
         ],
+        "@io_bazel_rules_go//go/platform:linux_riscv64": [
+            "//rpm:testimage_riscv64",
+        ],
         "//conditions:default": [
             "//rpm:testimage_x86_64",
         ],
@@ -234,6 +256,9 @@ container_image(
         ],
         "@io_bazel_rules_go//go/platform:linux_arm64": [
             "//rpm:centos_base_aarch64",
+        ],
+        "@io_bazel_rules_go//go/platform:linux_riscv64": [
+            "//rpm:centos_base_riscv64",
         ],
         "//conditions:default": [
             "//rpm:centos_base_x86_64",

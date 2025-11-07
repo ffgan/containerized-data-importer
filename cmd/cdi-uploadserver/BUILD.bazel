@@ -32,6 +32,7 @@ container_image(
     architecture = select({
         "@io_bazel_rules_go//go/platform:linux_s390x": "s390x",
         "@io_bazel_rules_go//go/platform:linux_arm64": "arm64",
+        "@io_bazel_rules_go//go/platform:linux_riscv64": "riscv64",
         "//conditions:default": "amd64",
     }),
     base = ":uploadserver_base",
@@ -53,6 +54,9 @@ container_image(
         ],
         "@io_bazel_rules_go//go/platform:linux_arm64": [
             "//rpm:cdi_uploadserver_base_aarch64",
+        ],
+        "@io_bazel_rules_go//go/platform:linux_riscv64": [
+            "//rpm:cdi_uploadserver_base_riscv64",
         ],
         "//conditions:default": [
             "//rpm:cdi_uploadserver_base_x86_64",

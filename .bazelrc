@@ -27,4 +27,9 @@ build:crossbuild-s390x --incompatible_enable_cc_toolchain_resolution --platforms
 run:crossbuild-s390x  --incompatible_enable_cc_toolchain_resolution --platforms=//bazel/platforms:s390x-none-linux-gnu --platforms=@io_bazel_rules_go//go/toolchain:linux_s390x_cgo
 test:crossbuild-s390x --platforms=@io_bazel_rules_go//go/toolchain:linux_s390x_cgo --host_javabase=@local_jdk//:jdk
 
+build:riscv64 --platforms=@io_bazel_rules_go//go/toolchain:linux_riscv64_cgo --incompatible_use_cc_configure_from_rules_cc
+run:riscv64 --platforms=@io_bazel_rules_go//go/toolchain:linux_riscv64_cgo --incompatible_use_cc_configure_from_rules_cc
+test:riscv64 --platforms=@io_bazel_rules_go//go/toolchain:linux_riscv64_cgo --host_javabase=@local_jdk//:jdk
+
+
 build --define gotags=selinux

@@ -29,6 +29,10 @@ if [ "${CDI_CONTAINER_BUILDCMD}" = "buildah" ]; then
     if rpm -qa | grep -q qemu-user-static-s390x; then
         BUILDAH_PLATFORM_FLAG="${BUILDAH_PLATFORM_FLAG},linux/s390x"
     fi
+
+    if rpm -qa | grep -q qemu-user-static-riscv64; then
+        BUILDAH_PLATFORM_FLAG="${BUILDAH_PLATFORM_FLAG},linux/riscv64"
+    fi
     
     echo "Building with $BUILDAH_PLATFORM_FLAG"
 fi

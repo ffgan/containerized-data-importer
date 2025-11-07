@@ -27,6 +27,7 @@ container_image(
     architecture = select({
         "@io_bazel_rules_go//go/platform:linux_s390x": "s390x",
         "@io_bazel_rules_go//go/platform:linux_arm64": "arm64",
+        "@io_bazel_rules_go//go/platform:linux_riscv64": "riscv64",
         "//conditions:default": "amd64",
     }),
     directory = "/",
@@ -38,6 +39,10 @@ container_image(
         "@io_bazel_rules_go//go/platform:linux_arm64": [
             ":test-img-tar",
             "//rpm:testimage_aarch64",
+        ],
+        "@io_bazel_rules_go//go/platform:linux_riscv64": [
+            ":test-img-tar",
+            "//rpm:testimage_riscv64",
         ],
         "//conditions:default": [
             ":test-img-tar",
@@ -51,6 +56,7 @@ container_image(
     architecture = select({
         "@io_bazel_rules_go//go/platform:linux_s390x": "s390x",
         "@io_bazel_rules_go//go/platform:linux_arm64": "arm64",
+        "@io_bazel_rules_go//go/platform:linux_riscv64": "riscv64",
         "//conditions:default": "amd64",
     }),
     base = ":cdi-func-test-registry-init-file-image",
@@ -64,6 +70,7 @@ container_image(
     architecture = select({
         "@io_bazel_rules_go//go/platform:linux_s390x": "s390x",
         "@io_bazel_rules_go//go/platform:linux_arm64": "arm64",
+        "@io_bazel_rules_go//go/platform:linux_riscv64": "riscv64",
         "//conditions:default": "amd64",
     }),
     base = ":cdi-func-test-registry-exec-init-image",
@@ -87,6 +94,7 @@ container_image(
     architecture = select({
         "@io_bazel_rules_go//go/platform:linux_s390x": "s390x",
         "@io_bazel_rules_go//go/platform:linux_arm64": "arm64",
+        "@io_bazel_rules_go//go/platform:linux_riscv64": "riscv64",
         "//conditions:default": "amd64",
     }),
     directory = "/",
@@ -99,6 +107,10 @@ container_image(
         "@io_bazel_rules_go//go/platform:linux_arm64": [
             ":populate-script-tar",
             "//rpm:testimage_aarch64",
+        ],
+        "@io_bazel_rules_go//go/platform:linux_riscv64": [
+            ":populate-script-tar",
+            "//rpm:testimage_riscv64",
         ],
         "//conditions:default": [
             ":populate-script-tar",
@@ -128,11 +140,13 @@ container_image(
     architecture = select({
         "@io_bazel_rules_go//go/platform:linux_s390x": "s390x",
         "@io_bazel_rules_go//go/platform:linux_arm64": "arm64",
+        "@io_bazel_rules_go//go/platform:linux_riscv64": "riscv64",
         "//conditions:default": "amd64",
     }),
     base = select({
         "@io_bazel_rules_go//go/platform:linux_s390x": "@registry-s390x//image",
         "@io_bazel_rules_go//go/platform:linux_arm64": "@registry-aarch64//image",
+        "@io_bazel_rules_go//go/platform:linux_riscv64": "@registry-riscv64//image",
         "//conditions:default": "@registry//image",
     }),
     directory = "/",

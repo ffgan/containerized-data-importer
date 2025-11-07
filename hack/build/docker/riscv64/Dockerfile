@@ -11,6 +11,7 @@ RUN 	dnf -y install dnf-plugins-core && \
 	git \
 	python3-pip \
 	python3-devel \
+	python3-six \
 	gcc \
 	gcc-c++ \
 	glibc-devel \

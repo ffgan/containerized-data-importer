@@ -17,6 +17,8 @@
 # Copyright 2023 NVIDIA CORPORATION
 #
 
+set -x
+
 source hack/build/common.sh
 
 COMMAND=$1
