@@ -43,6 +43,7 @@ RUN mkdir -p /gimme && curl -sL https://raw.githubusercontent.com/travis-ci/gimm
 
 RUN \
 	source /etc/profile.d/gimme.sh && \
+	go env -w  GOPROXY=https://goproxy.cn,direct && \
 	eval $(go env) && \
 	go install mvdan.cc/sh/cmd/shfmt@latest && \
 	go install github.com/mattn/goveralls@latest && \
