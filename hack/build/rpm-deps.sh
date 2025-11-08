@@ -234,4 +234,3 @@ bazel run \
 bazel run \
     --config=s390x \
     //:bazeldnf -- prune
-
