@@ -98,7 +98,6 @@ bazeldnf_dependencies()
 http_archive(
     name = "io_bazel_rules_docker",
     sha256 = "f5d26fcba1a99597a275e9a18971a4dcf44aecb109ccf8f080d080f1e6d9a10b",
-    strip_prefix = "rules_docker-0.16.0",
     urls = [
          "https://github.com/Boring545/rules_docker/releases/download/v0.16.0/rules_docker-v0.16.0.zip",
     ],
