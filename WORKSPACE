@@ -97,11 +97,10 @@ bazeldnf_dependencies()
 # bazel docker rules
 http_archive(
     name = "io_bazel_rules_docker",
-    sha256 = "95d39fd84ff4474babaf190450ee034d958202043e366b9fc38f438c9e6c3334",
+    sha256 = "f5d26fcba1a99597a275e9a18971a4dcf44aecb109ccf8f080d080f1e6d9a10b",
     strip_prefix = "rules_docker-0.16.0",
     urls = [
-        "https://github.com/bazelbuild/rules_docker/releases/download/v0.16.0/rules_docker-v0.16.0.tar.gz",
-        "https://storage.googleapis.com/builddeps/95d39fd84ff4474babaf190450ee034d958202043e366b9fc38f438c9e6c3334",
+         "https://github.com/Boring545/rules_docker/releases/download/v0.16.0/rules_docker-v0.16.0.zip",
     ],
 )
 
@@ -160,6 +159,14 @@ container_pull(
     repository = "centos/centos",
     tag = "stream9",
 )
+container_pull(
+    name = "fedora-riscv64",
+    architecture = "riscv64",
+    registry = "docker.io",
+    repository = "fedorariscv/base",
+    tag = "41",
+)
+
 
 # Pull base image container registry
 container_pull(
@@ -184,6 +191,15 @@ container_pull(
     registry = "quay.io",
     repository = "libpod/registry",
     tag = "2.8",
+)
+
+
+container_pull(
+    name = "registry-riscv64",
+    digest = "sha256:f57ffd2bb01704b6082396158e77ca6d1112bc6fe32315c322864de804750d8a",
+    registry = "docker.1ms.run",
+    repository = "registry",
+    tag = "3",
 )
 
 http_file(
