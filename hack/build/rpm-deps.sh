@@ -67,6 +67,13 @@ ovirt-imageio-client
 python3-ovirt-engine-sdk4
 "
 
+cdi_importer_extra_riscv64="
+nbdkit-vddk-plugin
+sqlite-libs
+ovirt-imageio-client
+python3-ovirt-engine-sdk4
+"
+
 cdi_uploadserver="
 libnbd
 qemu-img
@@ -233,4 +240,56 @@ bazel run \
 # remove all RPMs which are no longer referenced by a rpmtree
 bazel run \
     --config=s390x \
+    //:bazeldnf -- prune
+
+
+# XXX: passing --nobest otherwise we fail to solve the dependencies
+bazel run \
+    --config=riscv64 \
+    //:bazeldnf -- rpmtree \
+    --public \
+    --name testimage_riscv64 --arch riscv64 \
+    --nobest \
+    --basesystem centos-stream-release \
+    ${bazeldnf_repos} \
+    $centos_base \
+    $centos_extra \
+    $testimage
+
+bazel run \
+    --config=riscv64 \
+    //:bazeldnf -- rpmtree \
+    --public --nobest \
+    --name centos_base_riscv64 --arch riscv64 \
+    --basesystem centos-stream-release \
+    ${bazeldnf_repos} \
+    $centos_base \
+    $centos_extra
+
+bazel run \
+    --config=riscv64 \
+    //:bazeldnf -- rpmtree \
+    --public --nobest \
+    --name cdi_importer_base_riscv64 --arch riscv64 \
+    --basesystem centos-stream-release \
+    ${bazeldnf_repos} \
+    $centos_base \
+    $centos_extra \
+    $cdi_importer \
+    $cdi_importer_extra_riscv64
+
+bazel run \
+    --config=riscv64 \
+    //:bazeldnf -- rpmtree \
+    --public --nobest \
+    --name cdi_uploadserver_base_riscv64 --arch riscv64 \
+    --basesystem centos-stream-release \
+    ${bazeldnf_repos} \
+    $centos_base \
+    $centos_extra \
+    $cdi_uploadserver
+
+# remove all RPMs which are no longer referenced by a rpmtree
+bazel run \
+    --config=riscv64 \
     //:bazeldnf -- prune
