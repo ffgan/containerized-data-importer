@@ -67,13 +67,6 @@ ovirt-imageio-client
 python3-ovirt-engine-sdk4
 "
 
-cdi_importer_extra_riscv64="
-nbdkit-vddk-plugin
-sqlite-libs
-ovirt-imageio-client
-python3-ovirt-engine-sdk4
-"
-
 cdi_uploadserver="
 libnbd
 qemu-img
@@ -275,8 +268,7 @@ bazel run \
     ${bazeldnf_repos} \
     $centos_base \
     $centos_extra \
-    $cdi_importer \
-    $cdi_importer_extra_riscv64
+    $cdi_importer
 
 bazel run \
     --config=riscv64 \
