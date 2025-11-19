@@ -195,10 +195,10 @@ container_pull(
 
 container_pull(
     name = "registry-riscv64",
-    digest = "sha256:f57ffd2bb01704b6082396158e77ca6d1112bc6fe32315c322864de804750d8a",
+    digest = "sha256:06e4d220c267262ec6ce25e687354f0065a82e87e354e9eadae6e40253548f66",
     registry = "docker.1ms.run",
-    repository = "registry",
-    tag = "3",
+    repository = "library/registry",
+    tag = "3.0.0",
 )
 
 http_file(
