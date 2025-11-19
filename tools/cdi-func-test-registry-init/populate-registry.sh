@@ -138,6 +138,17 @@ function pushImages {
 
 update-ca-trust
 
+mkdir -p /etc/containers
+
+if [[ ! -f /etc/containers/storage.conf ]]; then
+    cat > /etc/containers/storage.conf <<EOF
+[storage]
+driver = "vfs"
+runroot = "/var/run/containers/storage"
+graphroot = "/var/lib/containers/storage"
+EOF
+fi
+
 # Avoid 'overlay' is not supported over overlayfs error
 sed -i 's,driver =.*,driver = "vfs",' /etc/containers/storage.conf
 
