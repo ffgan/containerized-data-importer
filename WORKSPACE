@@ -5560,6 +5560,14 @@ rpm(
 )
 
 rpm(
+    name = "libstdc__plus____plus__-0__14.2.1-3.fc41.riscv64",
+    sha256 = "3c850e2f0d94a45a6ca1d88102fd2da304c49fdee5f4b55650e63d2fa705f86a",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gcc/14.2.1/3.fc41/riscv64/libstdc++-14.2.1-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
     name = "libtasn1-0__4.19.0-10.fc41.riscv64",
     sha256 = "97165426537bdd7bc078b7ecbe6ea505bd43ea175ffadc5b3c11fb8630ed0ad2",
     urls = [
@@ -6007,14 +6015,6 @@ rpm(
 )
 
 rpm(
-    name = "libstdc-plus-plus-0__14.2.1-3.fc41.riscv64",
-    sha256 = "3c850e2f0d94a45a6ca1d88102fd2da304c49fdee5f4b55650e63d2fa705f86a",
-    urls = [
-       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gcc/14.2.1/3.fc41/riscv64/libstdc++-14.2.1-3.fc41.riscv64.rpm"
-    ],
-)
-
-rpm(
     name = "libxml2-0__2.12.8-2.fc41.riscv64",
     sha256 = "04dce5350d1e6a81e9bac791d8284fe347f71615210403ae9edff07cf2e2d1af",
     urls = [
@@ -6061,7 +6061,6 @@ rpm(
        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nbdkit/1.39.8/1.fc41/riscv64/nbdkit-xz-filter-1.39.8-1.fc41.riscv64.rpm"
     ],
 )
-
 
 rpm(
     name = "python3-pycurl-0__7.45.3-4.fc41.riscv64",
