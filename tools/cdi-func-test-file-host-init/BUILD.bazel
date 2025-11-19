@@ -69,6 +69,9 @@ container_image(
         "cdi-func-test-file-host-init",
         "-alsologtostderr",
     ],
+    env = {
+        "OPENSSL_CONF": "",
+    },
     files = [":cdi-func-test-file-host-init"],
     visibility = ["//visibility:public"],
 )
@@ -89,6 +92,7 @@ container_image(
     env = {
         "container": "",
         "docker": "",
+        "OPENSSL_CONF": "",
     },
     ports = [
         "80",
