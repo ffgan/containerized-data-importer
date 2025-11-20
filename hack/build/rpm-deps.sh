@@ -82,17 +82,6 @@ openssl
 buildah
 "
 
-testimageriscv64="
-crypto-policies-scripts
-qemu-img
-nginx
-libstdc++
-python3-systemd
-systemd-libs
-openssl
-buildah
-"
-
 # XXX: passing --nobest otherwise we fail to solve the dependencies
 bazel run \
     --config=${ARCHITECTURE} \
@@ -254,18 +243,18 @@ bazel run \
     --public \
     --name testimage_riscv64 --arch riscv64 \
     --nobest \
-    --basesystem fedora-release \
+    --basesystem centos-stream-release \
     ${bazeldnf_repos} \
     $centos_base \
     $centos_extra \
-    $testimageriscv64
+    $testimage
 
 bazel run \
     --config=riscv64 \
     //:bazeldnf -- rpmtree \
     --public --nobest \
     --name centos_base_riscv64 --arch riscv64 \
-    --basesystem fedora-release \
+    --basesystem centos-stream-release \
     ${bazeldnf_repos} \
     $centos_base \
     $centos_extra
@@ -275,7 +264,7 @@ bazel run \
     //:bazeldnf -- rpmtree \
     --public --nobest \
     --name cdi_importer_base_riscv64 --arch riscv64 \
-    --basesystem fedora-release \
+    --basesystem centos-stream-release \
     ${bazeldnf_repos} \
     $centos_base \
     $centos_extra \
@@ -286,7 +275,7 @@ bazel run \
     //:bazeldnf -- rpmtree \
     --public --nobest \
     --name cdi_uploadserver_base_riscv64 --arch riscv64 \
-    --basesystem fedora-release \
+    --basesystem centos-stream-release \
     ${bazeldnf_repos} \
     $centos_base \
     $centos_extra \

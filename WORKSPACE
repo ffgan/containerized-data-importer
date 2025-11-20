@@ -1,7 +1,12 @@
 register_toolchains("//:python_toolchain")
 
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
+load(
+    "@bazel_tools//tools/build_defs/repo:http.bzl",
+    "http_archive",
+    "http_file",
+)
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 http_archive(
     name = "rules_python",
@@ -20,6 +25,8 @@ deps()
 load("//bazel/toolchain:toolchain.bzl", "register_all_toolchains")
 
 register_all_toolchains()
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 
 http_archive(
     name = "io_bazel_rules_go",
@@ -73,22 +80,15 @@ gazelle_dependencies()
 
 http_archive(
     name = "bazeldnf",
-    sha256 = "03852830a239efaa7ee4ba7d50344b2bfd5b41c604e379011bcadf0477ecc8db",
-    strip_prefix = "bazeldnf-v0.99.1",
-    url = "https://github.com/rmohr/bazeldnf/releases/download/v0.99.1/bazeldnf-v0.99.1.tar.gz",
+    sha256 = "654917603c1a04511ba4b52838a54179322d37f9b02699ff5ad381637d849189",
+    urls = [
+        "https://gitee.com/huang_a/bazeldnf/releases/download/v0.5.9/bazeldnf-v0.5.9.tar.gz",
+    ],
 )
 
-load(
-    "@bazeldnf//bazeldnf:repositories.bzl",
-    "bazeldnf_dependencies",
-    "bazeldnf_register_toolchains",
-)
+load("@bazeldnf//:deps.bzl", "bazeldnf_dependencies", "rpm")
 
 bazeldnf_dependencies()
-
-bazeldnf_register_toolchains(name = "bazeldnf_toolchains")
-
-load("@bazeldnf//bazeldnf:defs.bzl", "rpm")
 
 #load("@com_github_bazelbuild_buildtools//buildifier:deps.bzl", "buildifier_dependencies")
 
@@ -99,7 +99,7 @@ http_archive(
     name = "io_bazel_rules_docker",
     sha256 = "f5d26fcba1a99597a275e9a18971a4dcf44aecb109ccf8f080d080f1e6d9a10b",
     urls = [
-        "https://github.com/Boring545/rules_docker/releases/download/v0.16.0/rules_docker-v0.16.0.zip",
+         "https://github.com/Boring545/rules_docker/releases/download/v0.16.0/rules_docker-v0.16.0.zip",
     ],
 )
 
@@ -158,7 +158,6 @@ container_pull(
     repository = "centos/centos",
     tag = "stream9",
 )
-
 container_pull(
     name = "fedora-riscv64",
     architecture = "riscv64",
@@ -166,6 +165,7 @@ container_pull(
     repository = "fedorariscv/base",
     tag = "41",
 )
+
 
 # Pull base image container registry
 container_pull(
@@ -191,6 +191,7 @@ container_pull(
     repository = "libpod/registry",
     tag = "2.8",
 )
+
 
 container_pull(
     name = "registry-riscv64",
@@ -255,27 +256,6 @@ http_file(
     name = "ovirt-imageio-daemon-aarch64",
     sha256 = "5a6697a4fd9c8d52a8a9ead8a4281b3d208df221e0d87f4377e7a3f6a3a1608d",
     urls = ["https://storage.googleapis.com/builddeps/5a6697a4fd9c8d52a8a9ead8a4281b3d208df221e0d87f4377e7a3f6a3a1608d"],
-)
-
-http_archive(
-    name = "rules_pkg",
-    sha256 = "8f9ee2dc10c1ae514ee599a8b42ed99fa262b757058f65ad3c384289ff70c4b8",
-    urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.9.1/rules_pkg-0.9.1.tar.gz",
-        "https://github.com/bazelbuild/rules_pkg/releases/download/0.9.1/rules_pkg-0.9.1.tar.gz",
-    ],
-)
-
-load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
-
-rules_pkg_dependencies()
-
-rpm(
-    name = "aardvark-dns-2__1.13.1-1.fc41.riscv64",
-    sha256 = "ebdcc24964841d9949ba1978c1350255eab53e477f6303f93d1e8f29c4f6d096",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/aardvark-dns/1.13.1/1.fc41/riscv64/aardvark-dns-1.13.1-1.fc41.riscv64.rpm",
-    ],
 )
 
 rpm(
@@ -351,14 +331,6 @@ rpm(
 )
 
 rpm(
-    name = "acl-0__2.3.2-2.fc41.riscv64",
-    sha256 = "28208fbdfae3ecb38ba3d1ada581e2df4ffee7b16ad49441a6c81aaf6a5fad8a",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/acl/2.3.2/2.fc41/riscv64/acl-2.3.2-2.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "alternatives-0__1.20-2.el9.aarch64",
     sha256 = "4d9055232088f1ab181e4741358aa188749b8195f184817c04a61447606cdfb5",
     urls = [
@@ -404,14 +376,6 @@ rpm(
 )
 
 rpm(
-    name = "alternatives-0__1.30-1.fc41.riscv64",
-    sha256 = "bfa9235cd4178fb1d7cf23dc0ce871a387bf7f380061536af9818ac9b76c6305",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/chkconfig/1.30/1.fc41/riscv64/alternatives-1.30-1.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "audit-libs-0__3.1.5-7.el9.aarch64",
     sha256 = "0687c4b4d23ad6219bb3d557266b0adad1e9a24c8061e2579bcc285cc53cf106",
     urls = [
@@ -439,14 +403,6 @@ rpm(
 )
 
 rpm(
-    name = "audit-libs-0__4.0.2-1.fc41.riscv64",
-    sha256 = "b1171c0b8851c08995b1117213a6a935aa70d4d3e9c0940a20d5d4c1196fba82",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/audit/4.0.2/1.fc41/riscv64/audit-libs-4.0.2-1.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "basesystem-0__11-13.el9.aarch64",
     sha256 = "a7a687ef39dd28d01d34fab18ea7e3e87f649f6c202dded82260b7ea625b9973",
     urls = [
@@ -470,14 +426,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/basesystem-11-13.el9.noarch.rpm",
         "https://storage.googleapis.com/builddeps/a7a687ef39dd28d01d34fab18ea7e3e87f649f6c202dded82260b7ea625b9973",
-    ],
-)
-
-rpm(
-    name = "basesystem-0__11-21.fc41.riscv64",
-    sha256 = "2a6e5bc318ed8e6afef275023ae44191fd2cc87f6458b3ffd3337ec6cecfa3af",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/basesystem/11/21.fc41/noarch/basesystem-11-21.fc41.noarch.rpm",
     ],
 )
 
@@ -523,22 +471,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/bash-5.1.8-9.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/823859a9e8fad83004fa0d9f698ff223f6f7d38fd8e7629509d98b5ba6764c03",
-    ],
-)
-
-rpm(
-    name = "bash-0__5.2.32-1.fc41.riscv64",
-    sha256 = "08117a5690952ab250132de25d9f8f6c0d7c78c460be608407bf9a7c5ccfbb32",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/bash/5.2.32/1.fc41/riscv64/bash-5.2.32-1.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
-    name = "buildah-2__1.38.0-2.fc41.riscv64",
-    sha256 = "8f047ff64486de7cdff812d9fa2ee7e318bdbd15d734ed41fabb8b0543342f9f",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/buildah/1.38.0/2.fc41/riscv64/buildah-1.38.0-2.fc41.riscv64.rpm",
     ],
 )
 
@@ -597,14 +529,6 @@ rpm(
 )
 
 rpm(
-    name = "bzip2-libs-0__1.0.8-19.fc41.riscv64",
-    sha256 = "56a896e3de3f838e449b2593c3b7a06483824f980e3bcc2e1e0d605025d8e9ad",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/bzip2/1.0.8/19.fc41/riscv64/bzip2-libs-1.0.8-19.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "ca-certificates-0__2020.2.50-94.el9.aarch64",
     sha256 = "3099471d984fb7d9e1cf42406eb08c154b34b8560742ed1f5eb9139f059c2d09",
     urls = ["https://storage.googleapis.com/builddeps/3099471d984fb7d9e1cf42406eb08c154b34b8560742ed1f5eb9139f059c2d09"],
@@ -640,14 +564,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/ca-certificates-2024.2.69_v8.0.303-91.4.el9.noarch.rpm",
         "https://storage.googleapis.com/builddeps/d18c1b9763c22dc93da804f96ad3d92b3157195c9eff6e923c33e9011df3e246",
-    ],
-)
-
-rpm(
-    name = "ca-certificates-0__2024.2.69_v8.0.401-1.0.fc41.riscv64",
-    sha256 = "4100975d09dd564c2fa9c70ddae861dc0ef7096234dd1370d5aa036995b27f2a",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/ca-certificates/2024.2.69_v8.0.401/1.0.fc41/noarch/ca-certificates-2024.2.69_v8.0.401-1.0.fc41.noarch.rpm",
     ],
 )
 
@@ -823,14 +739,6 @@ rpm(
 )
 
 rpm(
-    name = "containers-common-5__0.61.0-1.fc41.riscv64",
-    sha256 = "619fb5d59e3ff8d6668bbb19b17834c799bf4cef3c9f6651f7539b4bb8250ab6",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/containers-common/0.61.0/1.fc41/noarch/containers-common-0.61.0-1.fc41.noarch.rpm",
-    ],
-)
-
-rpm(
     name = "containers-common-extra-2__1-130.el9.aarch64",
     sha256 = "0bd9d7f11588478bc7a81683060f725b83944f12e69d93133af78779850efdf0",
     urls = [
@@ -854,14 +762,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/containers-common-extra-1-130.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/7b71e5eadea60474e51e661456f41776303412aadd00be444b2dde127dada214",
-    ],
-)
-
-rpm(
-    name = "containers-common-extra-5__0.61.0-1.fc41.riscv64",
-    sha256 = "6bfaa9ab6131bf3ccd0d63fb8dfbe206e8b81715aee4886ff3bec8d3c1b9f5c5",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/containers-common/0.61.0/1.fc41/noarch/containers-common-extra-0.61.0-1.fc41.noarch.rpm",
     ],
 )
 
@@ -901,14 +801,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/coreutils-single-8.32-39.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/09f7d8250c478a2931678063068adb8fccd2048d29fe9df31ca4e12c68f2ec7a",
-    ],
-)
-
-rpm(
-    name = "coreutils-single-0__9.5-11.fc41.riscv64",
-    sha256 = "a107464cd19f224eabd2347d3f3655ca46147eb0d23496e2f95ea43506bb408f",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/coreutils/9.5/11.fc41/riscv64/coreutils-single-9.5-11.fc41.riscv64.rpm",
     ],
 )
 
@@ -1006,14 +898,6 @@ rpm(
 )
 
 rpm(
-    name = "crypto-policies-0__20241029-1.git8baf557.fc41.riscv64",
-    sha256 = "c7cc137ea18ab4a3578c3020e4322f4f6ff1ba61a314ae49932b4acba4082cbf",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/crypto-policies/20241029/1.git8baf557.fc41/noarch/crypto-policies-20241029-1.git8baf557.fc41.noarch.rpm",
-    ],
-)
-
-rpm(
     name = "crypto-policies-0__20250128-1.git5269e22.el9.aarch64",
     sha256 = "f811d2c848f6f93a188f2d74d4ccd172e1dc88fa7919e8e203cf1df3d93571e1",
     urls = [
@@ -1037,14 +921,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/crypto-policies-20250128-1.git5269e22.el9.noarch.rpm",
         "https://storage.googleapis.com/builddeps/f811d2c848f6f93a188f2d74d4ccd172e1dc88fa7919e8e203cf1df3d93571e1",
-    ],
-)
-
-rpm(
-    name = "crypto-policies-scripts-0__20241029-1.git8baf557.fc41.riscv64",
-    sha256 = "eae760abd0887d5d2d6d97a5310e3c408d8705f2072cb4d454b7f49108d39746",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/crypto-policies/20241029/1.git8baf557.fc41/noarch/crypto-policies-scripts-20241029-1.git8baf557.fc41.noarch.rpm",
     ],
 )
 
@@ -1115,14 +991,6 @@ rpm(
 )
 
 rpm(
-    name = "curl-0__8.9.1-2.fc41.riscv64",
-    sha256 = "8d9934651a84c560d696e9cacc3c7bf3f3b7590438faee17b2445d6a1b1c8add",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/curl/8.9.1/2.fc41/riscv64/curl-8.9.1-2.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "cyrus-sasl-lib-0__2.1.27-21.el9.aarch64",
     sha256 = "898d7094964022ca527a6596550b8d46499b3274f8c6a1ee632a98961012d80c",
     urls = [
@@ -1146,14 +1014,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/cyrus-sasl-lib-2.1.27-21.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/fd4292a29759f9531bbc876d1818e7a83ccac76907234002f598671d7b338469",
-    ],
-)
-
-rpm(
-    name = "cyrus-sasl-lib-0__2.1.28-27.fc41.riscv64",
-    sha256 = "f81c30f33311c288bc64e74d777a7e0ab7608125a2b25faa018ac206d7d39aac",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/cyrus-sasl/2.1.28/27.fc41/riscv64/cyrus-sasl-lib-2.1.28-27.fc41.riscv64.rpm",
     ],
 )
 
@@ -1185,14 +1045,6 @@ rpm(
 )
 
 rpm(
-    name = "dbus-1__1.14.10-4.fc41.riscv64",
-    sha256 = "c7dcf36ab75ba792185e122e679b03b2a2853b7969cfd86be02bcca80e76d97e",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/dbus/1.14.10/4.fc41/riscv64/dbus-1.14.10-4.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "dbus-broker-0__28-7.el9.aarch64",
     sha256 = "28a7abe52040dcda6e5d941206ef6e5c47478fcc06a9f05c2ab7dacc2afa9f42",
     urls = [
@@ -1216,14 +1068,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/dbus-broker-28-7.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/dd65bddd728ed08dcdba5d06b5a5af9f958e5718e8cab938783241bd8f4d1131",
-    ],
-)
-
-rpm(
-    name = "dbus-broker-0__36-4.fc41.riscv64",
-    sha256 = "27d28a86383b8ebfa961ec4d6445f99c9d7c3ae1e14816cea813b9cbc3e981b3",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/dbus-broker/36/4.fc41/riscv64/dbus-broker-36-4.fc41.riscv64.rpm",
     ],
 )
 
@@ -1255,14 +1099,6 @@ rpm(
 )
 
 rpm(
-    name = "dbus-common-1__1.14.10-4.fc41.riscv64",
-    sha256 = "66c3201b59f2aec07e08dff239d02813193d81a414ad4f267bf7889b1daa941d",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/dbus/1.14.10/4.fc41/noarch/dbus-common-1.14.10-4.fc41.noarch.rpm",
-    ],
-)
-
-rpm(
     name = "expat-0__2.5.0-4.el9.aarch64",
     sha256 = "e071ad9e4ac5e4b21adc19304c62b32ac61f0b4dfd17092939eb3eb393f912f2",
     urls = [
@@ -1286,62 +1122,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/expat-2.5.0-4.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/360ed994ea2af5b3a7f37694dfdf2249d97e5e5ec2492c9223a2aec72ff8f480",
-    ],
-)
-
-rpm(
-    name = "expat-0__2.6.4-1.fc41.riscv64",
-    sha256 = "419dbbb3317792a799d032618f6efbf9b9060d64d782d8450365e604a3f2e920",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/expat/2.6.4/1.fc41/riscv64/expat-2.6.4-1.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
-    name = "fedora-gpg-keys-0__41-1.2.rv64.riscv64",
-    sha256 = "e9d1a3da9aeb877b92fbd232cbd133bd8bc1bce8e98c6dfcbed0ea719e366c36",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/fedora-repos/41/1.2.rv64/noarch/fedora-gpg-keys-41-1.2.rv64.noarch.rpm",
-    ],
-)
-
-rpm(
-    name = "fedora-logos-httpd-0__38.1.0-6.fc41.riscv64",
-    sha256 = "9646d79d808afbd9611d69a15d9956be2446348dfc4d934f670af0c8e85337e5",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/fedora-logos/38.1.0/6.fc41/noarch/fedora-logos-httpd-38.1.0-6.fc41.noarch.rpm",
-    ],
-)
-
-rpm(
-    name = "fedora-release-0__41-29.riscv64",
-    sha256 = "e20f410bc1853b5b4fc2cc1a90b0f158f8aff802707514907f4d3da4614913ce",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/fedora-release/41/29/noarch/fedora-release-41-29.noarch.rpm",
-    ],
-)
-
-rpm(
-    name = "fedora-release-common-0__41-29.riscv64",
-    sha256 = "a90a176142e148eaa8fbcc85983c13fb8759f222e4ee534f1334717ce2d9deda",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/fedora-release/41/29/noarch/fedora-release-common-41-29.noarch.rpm",
-    ],
-)
-
-rpm(
-    name = "fedora-release-identity-basic-0__41-29.riscv64",
-    sha256 = "e810c54646f7c2e3ac746006c1f749a345a7d05d15c782928037b4b205397a5d",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/fedora-release/41/29/noarch/fedora-release-identity-basic-41-29.noarch.rpm",
-    ],
-)
-
-rpm(
-    name = "fedora-repos-0__41-1.2.rv64.riscv64",
-    sha256 = "4a7867c4b04add6da20e7f027d0cad1185a24bbb563f77be5194452162a35087",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/fedora-repos/41/1.2.rv64/noarch/fedora-repos-41-1.2.rv64.noarch.rpm",
     ],
 )
 
@@ -1391,22 +1171,6 @@ rpm(
 )
 
 rpm(
-    name = "filesystem-0__3.18-24.fc41.riscv64",
-    sha256 = "0b5053e4c83ae165380cff6e607b0f2e086eb6a8f3582e86e15bd946ef564a8f",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/filesystem/3.18/24.fc41/riscv64/filesystem-3.18-24.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
-    name = "fuse3-libs-0__3.16.2-4.fc41.riscv64",
-    sha256 = "59e92b4d6c9850bc5b2ac4532595aaeb978dc4ea8b4733f2b54472cf8bef44c1",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/fuse3/3.16.2/4.fc41/riscv64/fuse3-libs-3.16.2-4.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "gawk-0__5.1.0-6.el9.aarch64",
     sha256 = "656d23c583b0705eaad75cffbe880f2ec39c7d5b7a756c6a8853c2977eec331b",
     urls = [
@@ -1434,14 +1198,6 @@ rpm(
 )
 
 rpm(
-    name = "gawk-0__5.3.0-4.fc41.riscv64",
-    sha256 = "f9f3dec04f7bbaf9fd908a28efff592e1856c035ef8f121d190a0479ead49a25",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gawk/5.3.0/4.fc41/riscv64/gawk-5.3.0-4.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "gdbm-libs-1__1.23-1.el9.aarch64",
     sha256 = "69754627d810b252c6202f2ef8765ca39b9c8a0b0fd6da0325a9e492dbf88f96",
     urls = [
@@ -1465,14 +1221,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/gdbm-libs-1.23-1.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/cada66331cc07a4f8a0701fc1ad13c346913a0d6f913e35c0257a68b6a1e6ce0",
-    ],
-)
-
-rpm(
-    name = "gdbm-libs-1__1.23-7.fc41.riscv64",
-    sha256 = "71cf5f0789f6a757efab03111f67e87435cfe1129c816dee3c11dba15681709f",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gdbm/1.23/7.fc41/riscv64/gdbm-libs-1.23-7.fc41.riscv64.rpm",
     ],
 )
 
@@ -1516,14 +1264,6 @@ rpm(
 )
 
 rpm(
-    name = "glib2-0__2.82.1-2.fc41.riscv64",
-    sha256 = "5125ae286d03f8ac84963cd00e92bb5d407888be670c30b5beeea3963ecaa305",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/glib2/2.82.1/2.fc41/riscv64/glib2-2.82.1-2.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "glibc-0__2.34-188.el9.aarch64",
     sha256 = "887f6eb93623e72150c98369df24791b4be6fda3a41d44ce1b45544dc847051d",
     urls = ["https://storage.googleapis.com/builddeps/887f6eb93623e72150c98369df24791b4be6fda3a41d44ce1b45544dc847051d"],
@@ -1551,14 +1291,6 @@ rpm(
     name = "glibc-0__2.34-29.el9.x86_64",
     sha256 = "900ac0b0ffe6dec1167f3b67335b811c9d95a2f50885b980950f4b527c500b67",
     urls = ["https://storage.googleapis.com/builddeps/900ac0b0ffe6dec1167f3b67335b811c9d95a2f50885b980950f4b527c500b67"],
-)
-
-rpm(
-    name = "glibc-0__2.40-4.fc41.riscv64",
-    sha256 = "84671a13852f227a091c46030f00f045fdd5ea46c3c326c701dfa2dcf058249c",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/glibc/2.40/4.fc41/riscv64/glibc-2.40-4.fc41.riscv64.rpm",
-    ],
 )
 
 rpm(
@@ -1592,14 +1324,6 @@ rpm(
 )
 
 rpm(
-    name = "glibc-common-0__2.40-4.fc41.riscv64",
-    sha256 = "030874c41cb6fb197349dbe95730ae70ed515b07ecce26b8201a19366faefd69",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/glibc/2.40/4.fc41/riscv64/glibc-common-2.40-4.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "glibc-minimal-langpack-0__2.34-188.el9.aarch64",
     sha256 = "f13c483540c7ec49512bd662ac8d947c53a27ba89a6ec8405558d7eef8c9d836",
     urls = ["https://storage.googleapis.com/builddeps/f13c483540c7ec49512bd662ac8d947c53a27ba89a6ec8405558d7eef8c9d836"],
@@ -1627,14 +1351,6 @@ rpm(
     name = "glibc-minimal-langpack-0__2.34-29.el9.x86_64",
     sha256 = "5ffe9c07ee24f50d6c94a574ca5e89fffe336a7ee004ba362e8ebaff62f47186",
     urls = ["https://storage.googleapis.com/builddeps/5ffe9c07ee24f50d6c94a574ca5e89fffe336a7ee004ba362e8ebaff62f47186"],
-)
-
-rpm(
-    name = "glibc-minimal-langpack-0__2.40-4.fc41.riscv64",
-    sha256 = "2b52676c5f6abfeb7e72226a01fa472a95681ef26499cadd00b7612777d61020",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/glibc/2.40/4.fc41/riscv64/glibc-minimal-langpack-2.40-4.fc41.riscv64.rpm",
-    ],
 )
 
 rpm(
@@ -1683,14 +1399,6 @@ rpm(
 )
 
 rpm(
-    name = "gmp-1__6.3.0-2.fc41.riscv64",
-    sha256 = "6c5b290fdf1fbccf0915e1023d75512fe81a3a79b806b03d2c347894bcf54771",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gmp/6.3.0/2.fc41/riscv64/gmp-6.3.0-2.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "gnupg2-0__2.3.3-4.el9.aarch64",
     sha256 = "ea254e4f615d3865263236e433e3fe674fd58b842134e72f07db80a50df0f0cb",
     urls = [
@@ -1714,14 +1422,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/gnupg2-2.3.3-4.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/03e7697ffc0ae9301c30adccfe28d3b100063e5d2c7c5f87dc21f1c56af4052f",
-    ],
-)
-
-rpm(
-    name = "gnupg2-0__2.4.5-3.fc41.riscv64",
-    sha256 = "e9894f1ffc6de82aa968e887d585ce6510d3ef6bd805a3d3e546a6a8bd55ff36",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gnupg2/2.4.5/3.fc41/riscv64/gnupg2-2.4.5-3.fc41.riscv64.rpm",
     ],
 )
 
@@ -1765,22 +1465,6 @@ rpm(
 )
 
 rpm(
-    name = "gnutls-0__3.8.7-1.fc41.riscv64",
-    sha256 = "67cc564fbcdf108ca9429443c775a3de9e346d61bd71618c0a504c363877cf0f",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gnutls/3.8.7/1.fc41/riscv64/gnutls-3.8.7-1.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
-    name = "gperftools-libs-0__2.15-4.fc41.riscv64",
-    sha256 = "3de67004091848635d99f2b61fcbd3badb4e03eabce729fd53e7b4bbad21bcce",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gperftools/2.15/4.fc41/riscv64/gperftools-libs-2.15-4.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "gpgme-0__1.15.1-6.el9.aarch64",
     sha256 = "590f495d6b2176f692038dae2a8a80b6edcc9294574f9ba16cb0713829b137a2",
     urls = [
@@ -1804,22 +1488,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/gpgme-1.15.1-6.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/c5afb08432a50112929dafd7430e6af28fbad3273a6ba81571ed1dbf37d83cf7",
-    ],
-)
-
-rpm(
-    name = "gpgme-0__1.23.2-6.fc41.riscv64",
-    sha256 = "69bd5b67f6c4dfbf844b3445d2d0be9f7fba1a8fd2e2bee6664d105386a269d5",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gpgme/1.23.2/6.fc41/riscv64/gpgme-1.23.2-6.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
-    name = "grep-0__3.11-9.fc41.riscv64",
-    sha256 = "464cfd46e9126aeb017f94f26483a0a518cd7491aac3bef4b8ba5c8519483de6",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/grep/3.11/9.fc41/riscv64/grep-3.11-9.fc41.riscv64.rpm",
     ],
 )
 
@@ -1905,14 +1573,6 @@ rpm(
 )
 
 rpm(
-    name = "iptables-libs-0__1.8.10-15.fc41.riscv64",
-    sha256 = "136791b7a45cf9c4f66918ab1b8894097c808b3cb9cf50eb5e4a3a56017153df",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/iptables/1.8.10/15.fc41/riscv64/iptables-libs-1.8.10-15.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "iptables-nft-0__1.8.10-11.el9.aarch64",
     sha256 = "f6a8ddd687f1af180d4a7a24557b209952b393e279ba36443d4a5daeb7cd11aa",
     urls = [
@@ -1940,14 +1600,6 @@ rpm(
 )
 
 rpm(
-    name = "jansson-0__2.13.1-10.fc41.riscv64",
-    sha256 = "eb80f92f54bed52547921fab469f5bcf99e829d7af5b90ff748994924629530b",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/jansson/2.13.1/10.fc41/riscv64/jansson-2.13.1-10.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "jansson-0__2.14-1.el9.aarch64",
     sha256 = "23a8033dae909a6b87db199e04ecbc9798820b1b939e12d51733fed4554b9279",
     urls = [
@@ -1971,14 +1623,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/jansson-2.14-1.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/c3fb9f8020f978f9b392709996e62e4ddb6cb19074635af3338487195b688f66",
-    ],
-)
-
-rpm(
-    name = "json-c-0__0.17-4.fc41.riscv64",
-    sha256 = "5bbef5ceda66611c582bd7371f90d19a60d6e5fa706a2b056335ca6c81d99d85",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/json-c/0.17/4.fc41/riscv64/json-c-0.17-4.fc41.riscv64.rpm",
     ],
 )
 
@@ -2024,14 +1668,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/keyutils-libs-1.6.3-1.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/aef982501694486a27411c68698886d76ec70c5cd10bfe619501e7e4c36f50a9",
-    ],
-)
-
-rpm(
-    name = "keyutils-libs-0__1.6.3-4.fc41.riscv64",
-    sha256 = "f3b3be7838526036d4dded73c160114f41bd6cdc81691b3d45c58f3c4028fe0b",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/keyutils/1.6.3/4.fc41/riscv64/keyutils-libs-1.6.3-4.fc41.riscv64.rpm",
     ],
 )
 
@@ -2102,14 +1738,6 @@ rpm(
 )
 
 rpm(
-    name = "krb5-libs-0__1.21.3-3.fc41.riscv64",
-    sha256 = "9f672c6dcd63128e8c5d6205458bacd0d02023ddbbf8cd91f5744690eddb8627",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/krb5/1.21.3/3.fc41/riscv64/krb5-libs-1.21.3-3.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libacl-0__2.3.1-3.el9.aarch64",
     sha256 = "4975593414dfa1e822cd108e988d18453c2ff036b03e4cdbf38db0afb45e0c92",
     urls = [
@@ -2155,14 +1783,6 @@ rpm(
 )
 
 rpm(
-    name = "libacl-0__2.3.2-2.fc41.riscv64",
-    sha256 = "a573413df4f628fd2ac72cfb9351bcd68dff138bf5aa8b4ac454cd03a81d5cf3",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/acl/2.3.2/2.fc41/riscv64/libacl-2.3.2-2.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libaio-0__0.3.111-13.el9.aarch64",
     sha256 = "1730d732818fa2471b5cd461175ceda18e909410db8a32185d8db2aa7461130c",
     urls = [
@@ -2186,14 +1806,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/libaio-0.3.111-13.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/7d9d4d37e86ba94bb941e2dad40c90a157aaa0602f02f3f90e76086515f439be",
-    ],
-)
-
-rpm(
-    name = "libaio-0__0.3.111-20.fc41.riscv64",
-    sha256 = "fabbe6dd598425bba30c461fb17d9e28c8ad1cd43820c54c20daab113dfbcc09",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libaio/0.3.111/20.fc41/riscv64/libaio-0.3.111-20.fc41.riscv64.rpm",
     ],
 )
 
@@ -2225,27 +1837,11 @@ rpm(
 )
 
 rpm(
-    name = "libassuan-0__2.5.7-2.fc41.riscv64",
-    sha256 = "44eb32dad7e629a9dfbef39c713a7c5f24a64abcd84dec219a4c7e147fa78dcb",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libassuan/2.5.7/2.fc41/riscv64/libassuan-2.5.7-2.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libatomic-0__11.5.0-5.el9.aarch64",
     sha256 = "b2c8f9f3aa0e766c5f81cf0f79fb141ba8bef9ee64c4567215fb4c23053dc471",
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/aarch64/os/Packages/libatomic-11.5.0-5.el9.aarch64.rpm",
         "https://storage.googleapis.com/builddeps/b2c8f9f3aa0e766c5f81cf0f79fb141ba8bef9ee64c4567215fb4c23053dc471",
-    ],
-)
-
-rpm(
-    name = "libatomic-0__14.2.1-3.fc41.riscv64",
-    sha256 = "f6a3eb5bffa6cec6cb6d08c3b028446f40ecff5e01f2d3c8029a571a9644cec3",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gcc/14.2.1/3.fc41/riscv64/libatomic-14.2.1-3.fc41.riscv64.rpm",
     ],
 )
 
@@ -2273,22 +1869,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/libattr-2.5.1-3.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/d4db095a015e84065f27a642ee7829cd1690041ba8c51501f908cc34760c9409",
-    ],
-)
-
-rpm(
-    name = "libattr-0__2.5.2-4.fc41.riscv64",
-    sha256 = "8b27b8a414fe18687911008cf1d6c77262774ac82499782200e52a2ac3e89814",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/attr/2.5.2/4.fc41/riscv64/libattr-2.5.2-4.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
-    name = "libb2-0__0.98.1-12.fc41.riscv64",
-    sha256 = "1c7ced3b7d07180d2b7f8fcc436b4fdccf3f7e14c8618359cf660ee6259b683d",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libb2/0.98.1/12.fc41/riscv64/libb2-0.98.1-12.fc41.riscv64.rpm",
     ],
 )
 
@@ -2328,14 +1908,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/libblkid-2.37.4-21.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/2433f8829f894c7c5ba0639eb37a18a92632d4f9383551c901434b4353f96fc4",
-    ],
-)
-
-rpm(
-    name = "libblkid-0__2.40.2-4.fc41.riscv64",
-    sha256 = "1b0bc904b55a9787ec8a62ffa2b8db63ea5421eb7fb699b8db9e9c174c2eeec0",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/util-linux/2.40.2/4.fc41/riscv64/libblkid-2.40.2-4.fc41.riscv64.rpm",
     ],
 )
 
@@ -2385,14 +1957,6 @@ rpm(
 )
 
 rpm(
-    name = "libcap-0__2.70-4.fc41.riscv64",
-    sha256 = "f5d9ddd213c85ff33bda31d3ddd8bc02324a6cac45644fca3b0299a5a325ed88",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libcap/2.70/4.fc41/riscv64/libcap-2.70-4.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libcap-ng-0__0.8.2-7.el9.aarch64",
     sha256 = "1dfa7208abe1af5522523cabdabb73783ed1df4424dc8846eab8a570d010deaa",
     urls = [
@@ -2416,14 +1980,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/libcap-ng-0.8.2-7.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/62429b788acfb40dbc9da9951690c11e907e230879c790d139f73d0e85dd76f4",
-    ],
-)
-
-rpm(
-    name = "libcap-ng-0__0.8.5-3.fc41.riscv64",
-    sha256 = "37364a8dbef40d21f0d7188f7d68be023998a7216ee944a76fbb266214565bab",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libcap-ng/0.8.5/3.fc41/riscv64/libcap-ng-0.8.5-3.fc41.riscv64.rpm",
     ],
 )
 
@@ -2467,14 +2023,6 @@ rpm(
 )
 
 rpm(
-    name = "libcom_err-0__1.47.1-6.fc41.riscv64",
-    sha256 = "9c358735bfc524cb5c5edcef9d9d421af9e43a3fbadc52af0a4649eb16e33c62",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/e2fsprogs/1.47.1/6.fc41/riscv64/libcom_err-1.47.1-6.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libcurl-minimal-0__7.76.1-14.el9.aarch64",
     sha256 = "7e50f6b6f25c0855a9a509d5b205795ee4e73b18c5f8e7732f072f43d1a6714f",
     urls = ["https://storage.googleapis.com/builddeps/7e50f6b6f25c0855a9a509d5b205795ee4e73b18c5f8e7732f072f43d1a6714f"],
@@ -2510,14 +2058,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/libcurl-minimal-7.76.1-31.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/6438485e38465ee944e25abedcf4a1761564fe5202f05a02c71e4c880255b539",
-    ],
-)
-
-rpm(
-    name = "libcurl-minimal-0__8.9.1-2.fc41.riscv64",
-    sha256 = "10c9a1058f08f052927529c7b5baf117408d5aa8b634f1f2458dd5e5be60a01c",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/curl/8.9.1/2.fc41/riscv64/libcurl-minimal-8.9.1-2.fc41.riscv64.rpm",
     ],
 )
 
@@ -2576,30 +2116,6 @@ rpm(
 )
 
 rpm(
-    name = "libeconf-0__0.6.2-3.fc41.riscv64",
-    sha256 = "36d3bcb35ff30d3a60c336dec8fbf59f697cd4432ebdb1561d12482a91763698",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libeconf/0.6.2/3.fc41/riscv64/libeconf-0.6.2-3.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
-    name = "libedit-0__3.1-53.20240808cvs.fc41.riscv64",
-    sha256 = "cd1a74fde40482b8f2fb1faa9ba6d50854cf1d54c5ad60d861f526b5d0d5149a",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libedit/3.1/53.20240808cvs.fc41/riscv64/libedit-3.1-53.20240808cvs.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
-    name = "libevent-0__2.1.12-14.fc41.riscv64",
-    sha256 = "1fe14a08d2e63863fc669406bdacd0e9783774e5844fad61e5c6479bff3c4a4b",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libevent/2.1.12/14.fc41/riscv64/libevent-2.1.12-14.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libevent-0__2.1.12-8.el9.aarch64",
     sha256 = "abea343484ceb42612ce394cf7cf0a191ae7d6ea93391fa32721ff7e04b0bb28",
     urls = [
@@ -2654,14 +2170,6 @@ rpm(
 )
 
 rpm(
-    name = "libfdisk-0__2.40.2-4.fc41.riscv64",
-    sha256 = "ebe27b9c295ad44e0ad44514a78d4945dcb76743b4d942462688943d8ce09f89",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/util-linux/2.40.2/4.fc41/riscv64/libfdisk-2.40.2-4.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libffi-0__3.4.2-7.el9.aarch64",
     sha256 = "6a42002c0b63a3c4d1e8da5cdf4822f442a7b458d80e69673715715d38ea977d",
     urls = [
@@ -2707,14 +2215,6 @@ rpm(
 )
 
 rpm(
-    name = "libffi-0__3.4.6-3.fc41.riscv64",
-    sha256 = "cc92b8aa88859410eafc60f6973f47b0316644d51efc06626ae0dba42075b4cd",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libffi/3.4.6/3.fc41/riscv64/libffi-3.4.6-3.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libgcc-0__11.2.1-9.4.el9.aarch64",
     sha256 = "83553d747fbbe61a2e5a22604f15d38e366bf4b453c99947bc1253ddec6b5049",
     urls = ["https://storage.googleapis.com/builddeps/83553d747fbbe61a2e5a22604f15d38e366bf4b453c99947bc1253ddec6b5049"],
@@ -2750,14 +2250,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/libgcc-11.5.0-5.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/442c065a815212ac21760ff9f0bd93e9f5d5972925d9e987a421cbf6ebba41d2",
-    ],
-)
-
-rpm(
-    name = "libgcc-0__14.2.1-3.fc41.riscv64",
-    sha256 = "e07f2d92bcc22ca497c568de187f31d8c8ea6350e227db84abc4d622c4abf01d",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gcc/14.2.1/3.fc41/riscv64/libgcc-14.2.1-3.fc41.riscv64.rpm",
     ],
 )
 
@@ -2801,22 +2293,6 @@ rpm(
 )
 
 rpm(
-    name = "libgcrypt-0__1.11.0-3.fc41.riscv64",
-    sha256 = "6849f5b10a9aa45bade8aa630fd7050390917c433a4fa1ad699f16c3264ca04a",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libgcrypt/1.11.0/3.fc41/riscv64/libgcrypt-1.11.0-3.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
-    name = "libgomp-0__14.2.1-3.fc41.riscv64",
-    sha256 = "c812a49a0fe80fcd702e94665d01c290daa97ea11ef79780fb98ac2410a153e5",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gcc/14.2.1/3.fc41/riscv64/libgomp-14.2.1-3.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libgpg-error-0__1.42-5.el9.aarch64",
     sha256 = "ffeb04823b5317c7e016542c8ecc5180c7824f8b59a180f2434fd096a34a9105",
     urls = [
@@ -2840,14 +2316,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/libgpg-error-1.42-5.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/a1883804c376f737109f4dff06077d1912b90150a732d11be7bc5b3b67e512fe",
-    ],
-)
-
-rpm(
-    name = "libgpg-error-0__1.50-2.fc41.riscv64",
-    sha256 = "bdd78c0bbcf10310593141eb947d52f73a00790fc0d7cac54d295526eea9e880",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libgpg-error/1.50/2.fc41/riscv64/libgpg-error-1.50-2.fc41.riscv64.rpm",
     ],
 )
 
@@ -2879,14 +2347,6 @@ rpm(
 )
 
 rpm(
-    name = "libidn2-0__2.3.7-2.fc41.riscv64",
-    sha256 = "b657ce3a7bb85af42b36f94a5f2794f7a44630b174907a4f31a783b7f601e35e",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libidn2/2.3.7/2.fc41/riscv64/libidn2-2.3.7-2.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libksba-0__1.5.1-7.el9.aarch64",
     sha256 = "48fca9ffafad57ad6b021261e7998b97e56a63fd79344f8540c61411bf4cda90",
     urls = [
@@ -2914,14 +2374,6 @@ rpm(
 )
 
 rpm(
-    name = "libksba-0__1.6.7-2.fc41.riscv64",
-    sha256 = "55a73ee795cc52cfff8472fc0f71f9bb2629b145ba8c243a9a08c843a96d2338",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libksba/1.6.7/2.fc41/riscv64/libksba-1.6.7-2.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libmnl-0__1.0.4-16.el9.aarch64",
     sha256 = "c4d87c6439aa762891b024c0213df47af50e5b0683ffd827013bd02882d7d9b3",
     urls = [
@@ -2945,14 +2397,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/libmnl-1.0.4-16.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/e60f3be453b44ea04bb596594963be1e1b3f4377f87b4ff923d612eae15740ce",
-    ],
-)
-
-rpm(
-    name = "libmnl-0__1.0.5-6.fc41.riscv64",
-    sha256 = "21c6aa8ffb671c86e1ab24d8b38a68a1221c49d8bccdb5e14ec688002fb6827d",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libmnl/1.0.5/6.fc41/riscv64/libmnl-1.0.5-6.fc41.riscv64.rpm",
     ],
 )
 
@@ -2996,14 +2440,6 @@ rpm(
 )
 
 rpm(
-    name = "libmount-0__2.40.2-4.fc41.riscv64",
-    sha256 = "c8823a80bf7a5405af05401a48b502278a3565fb0ef8c17c7823eb82aaa0bd33",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/util-linux/2.40.2/4.fc41/riscv64/libmount-2.40.2-4.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libnbd-0__1.20.3-4.el9.aarch64",
     sha256 = "7c9bb6872b93d95b2a2bf729793b50848cde216089293010197471146d23d9a4",
     urls = [
@@ -3027,14 +2463,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/libnbd-1.20.3-4.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/d74d51b389dcf44bd2e10e76085dc41db925debee2ce33b721c554a9dd1f40af",
-    ],
-)
-
-rpm(
-    name = "libnbd-0__1.21.6-1.fc41.riscv64",
-    sha256 = "7651a235634acd1e539e2a7f23b970bc8eea7fc4251e267d48c1b34164f0896e",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libnbd/1.21.6/1.fc41/riscv64/libnbd-1.21.6-1.fc41.riscv64.rpm",
     ],
 )
 
@@ -3066,14 +2494,6 @@ rpm(
 )
 
 rpm(
-    name = "libnetfilter_conntrack-0__1.0.9-6.fc41.riscv64",
-    sha256 = "25eaea75cbdcb6fe3cc2e954911ae72b9d3494fbb01bcaf90f5585972317652a",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libnetfilter_conntrack/1.0.9/6.fc41/riscv64/libnetfilter_conntrack-1.0.9-6.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libnfnetlink-0__1.0.1-23.el9.aarch64",
     sha256 = "8b261a1555fd3b299c8b16d7c1159c726ec17dbd78d5217dbc6e69099f01c6cb",
     urls = [
@@ -3101,14 +2521,6 @@ rpm(
 )
 
 rpm(
-    name = "libnfnetlink-0__1.0.1-28.fc41.riscv64",
-    sha256 = "267a7a6bd39a36f7e4266ec5ba5759053113129c8ad9c265393309b0353d38db",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libnfnetlink/1.0.1/28.fc41/riscv64/libnfnetlink-1.0.1-28.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libnftnl-0__1.2.6-4.el9.aarch64",
     sha256 = "59f6d922f5540479c088120d411d2ca3cdb4e5ddf6fe8fc05dbd796b9e36ecd3",
     urls = [
@@ -3132,14 +2544,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/libnftnl-1.2.6-4.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/45d7325859bdfbddd9f24235695fc55138549fdccbe509484e9f905c5f1b466b",
-    ],
-)
-
-rpm(
-    name = "libnftnl-0__1.2.7-2.fc41.riscv64",
-    sha256 = "43412ebbd5751d08a147a162022938ba5189b5224fd8e347d1afd7e7dbe66965",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libnftnl/1.2.7/2.fc41/riscv64/libnftnl-1.2.7-2.fc41.riscv64.rpm",
     ],
 )
 
@@ -3185,14 +2589,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/libnghttp2-1.43.0-6.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/fc1cadbc6cf37cbea60112b7ae6f92fabfd5a7f76fa526bb5a1ea82746455ec7",
-    ],
-)
-
-rpm(
-    name = "libnghttp2-0__1.62.1-2.fc41.riscv64",
-    sha256 = "ea50c1b3d920585ed80e5598eae3e3be21d91060ed02766a30cd843876536192",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nghttp2/1.62.1/2.fc41/riscv64/libnghttp2-1.62.1-2.fc41.riscv64.rpm",
     ],
 )
 
@@ -3251,14 +2647,6 @@ rpm(
 )
 
 rpm(
-    name = "libseccomp-0__2.5.5-2.fc41.riscv64",
-    sha256 = "ef8055690ac236725788aa57e048d0a0076b52660b9117fa926a0bfe4d555a5d",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libseccomp/2.5.5/2.fc41/riscv64/libseccomp-2.5.5-2.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libselinux-0__3.3-2.el9.aarch64",
     sha256 = "f14cadbedd18e37a5ecb11d112095aa3e539de58bea77fb6f2aca5f165bf788b",
     urls = ["https://storage.googleapis.com/builddeps/f14cadbedd18e37a5ecb11d112095aa3e539de58bea77fb6f2aca5f165bf788b"],
@@ -3298,14 +2686,6 @@ rpm(
 )
 
 rpm(
-    name = "libselinux-0__3.7-6.fc41.riscv64",
-    sha256 = "12c5612f5be7d015f9a03e3e6b185330d7f7195c5a917c4b3b5c10575930e8c4",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libselinux/3.7/6.fc41/riscv64/libselinux-3.7-6.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libsemanage-0__3.6-5.el9.aarch64",
     sha256 = "f5402c7056dc92ea2e52ad436c6eece8c18040ac77141e5f0ffe01eea209dfe7",
     urls = [
@@ -3329,14 +2709,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/libsemanage-3.6-5.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/3dcf6e7f2779434d9dc7aef0065c3a2977792170264a60d4324f6625bb9cd69a",
-    ],
-)
-
-rpm(
-    name = "libsemanage-0__3.7-3.fc41.riscv64",
-    sha256 = "8ebcbffd03f4d253e61426265b88c87d87c79a4d5404cccd230a2baa0e614fa8",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libsemanage/3.7/3.fc41/riscv64/libsemanage-3.7-3.fc41.riscv64.rpm",
     ],
 )
 
@@ -3376,14 +2748,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/libsepol-3.6-3.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/6d3d16c3121ccf989f8a123812e524cb1fc098fb01ec9f1c6327544e85aaf84d",
-    ],
-)
-
-rpm(
-    name = "libsepol-0__3.7-3.fc41.riscv64",
-    sha256 = "0a37908c5f71ea751304c9255279454aaa16d5954c27e3b05a2d4c825e8cd221",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libsepol/3.7/3.fc41/riscv64/libsepol-3.7-3.fc41.riscv64.rpm",
     ],
 )
 
@@ -3454,14 +2818,6 @@ rpm(
 )
 
 rpm(
-    name = "libsmartcols-0__2.40.2-4.fc41.riscv64",
-    sha256 = "94492c8ebe0436e5695cc4e9df4589c0db4a091aba8773dd701447817c32da93",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/util-linux/2.40.2/4.fc41/riscv64/libsmartcols-2.40.2-4.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libstdc__plus____plus__-0__11.5.0-5.el9.aarch64",
     sha256 = "d915eadf7a4d0a72db724e5eb07e71d31d52e1e22ca504845b9aec6e59c892b4",
     urls = [
@@ -3485,14 +2841,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/libstdc++-11.5.0-5.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/6628a0027a113c8687d0cd52ed5725ee6cb1ee2a02897349289d683fc6453223",
-    ],
-)
-
-rpm(
-    name = "libstdc__plus____plus__-0__14.2.1-3.fc41.riscv64",
-    sha256 = "3c850e2f0d94a45a6ca1d88102fd2da304c49fdee5f4b55650e63d2fa705f86a",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gcc/14.2.1/3.fc41/riscv64/libstdc++-14.2.1-3.fc41.riscv64.rpm",
     ],
 )
 
@@ -3542,14 +2890,6 @@ rpm(
 )
 
 rpm(
-    name = "libtasn1-0__4.19.0-10.fc41.riscv64",
-    sha256 = "97165426537bdd7bc078b7ecbe6ea505bd43ea175ffadc5b3c11fb8630ed0ad2",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libtasn1/4.19.0/10.fc41/riscv64/libtasn1-4.19.0-10.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libtool-ltdl-0__2.4.6-46.el9.aarch64",
     sha256 = "4efdb557a6a26e888d976cb15f3eadd8302dc25903df85b8cbfc92e61d7d6d2f",
     urls = [
@@ -3573,14 +2913,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/libtool-ltdl-2.4.6-46.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/a04d5a4ccd83b8903e2d7fe76208f57636a6ed07f20e0d350a2b1075c15a2147",
-    ],
-)
-
-rpm(
-    name = "libtool-ltdl-0__2.4.7-10.1.riscv64.fc41.riscv64",
-    sha256 = "b0018f589dfb644b25ce2e4c4cfc21e1e9b3d70da719e7709e6de56de0795538",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libtool/2.4.7/10.1.riscv64.fc41/riscv64/libtool-ltdl-2.4.7-10.1.riscv64.fc41.riscv64.rpm",
     ],
 )
 
@@ -3612,22 +2944,6 @@ rpm(
 )
 
 rpm(
-    name = "libunistring-0__1.1-8.fc41.riscv64",
-    sha256 = "1d3bea446977dc3f7ffa54d208ad060481520e2b2c81fa3ea6c5670ad96d328d",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libunistring/1.1/8.fc41/riscv64/libunistring-1.1-8.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
-    name = "libunwind-0__1.8.0-5.fc41.riscv64",
-    sha256 = "319385c71da97ea9059388239152fdf3c5fdd7b74f4820a32fd9853bb03ae6b8",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libunwind/1.8.0/5.fc41/riscv64/libunwind-1.8.0-5.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "liburing-0__2.5-1.el9.aarch64",
     sha256 = "12f91bd14e1eb7e2b37783561c1a0658d85c7ee2a9259391ed15e01bf4186649",
     urls = [
@@ -3651,14 +2967,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/liburing-2.5-1.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/12558038d4226495da372e5f4369d02c144c759a621d27116299ce0a794e849f",
-    ],
-)
-
-rpm(
-    name = "liburing-0__2.6-2.fc41.riscv64",
-    sha256 = "2180c7ca8f71bf6f813f5ff9d20aebeca39b29e759c1c49769f37da661c9cdf1",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/liburing/2.6/2.fc41/riscv64/liburing-2.6-2.fc41.riscv64.rpm",
     ],
 )
 
@@ -3729,14 +3037,6 @@ rpm(
 )
 
 rpm(
-    name = "libuuid-0__2.40.2-4.fc41.riscv64",
-    sha256 = "c209ffe88510642c43b2a8596ee2f5d01392b9aa18d9a5fca9d1f32d9c9d0e6e",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/util-linux/2.40.2/4.fc41/riscv64/libuuid-2.40.2-4.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libverto-0__0.3.2-3.el9.aarch64",
     sha256 = "1190ea8310b0dab3ebbade3180b4c2cf7064e90c894e5415711d7751e709be8a",
     urls = [
@@ -3760,14 +3060,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/libverto-0.3.2-3.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/c55578b84f169c4ed79b2d50ea03fd1817007e35062c9fe7a58e6cad025f3b24",
-    ],
-)
-
-rpm(
-    name = "libverto-0__0.3.2-9.fc41.riscv64",
-    sha256 = "32e34e18363bec0f98428dd21bae54c64355beb06bc933d5a459907f8e43d330",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libverto/0.3.2/9.fc41/riscv64/libverto-0.3.2-9.fc41.riscv64.rpm",
     ],
 )
 
@@ -3799,27 +3091,11 @@ rpm(
 )
 
 rpm(
-    name = "libxcrypt-0__4.4.36-10.fc41.riscv64",
-    sha256 = "f90acdafd1aa0d871b6ea6e7c4b24f7ae0962df3d88371117ffc94d8750f5d9d",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libxcrypt/4.4.36/10.fc41/riscv64/libxcrypt-4.4.36-10.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "libxcrypt-compat-0__4.4.18-3.el9.x86_64",
     sha256 = "3ea916c72412d3a7efd8c70cfa1ed18863c018091001b631390b19c454136b87",
     urls = [
         "http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/libxcrypt-compat-4.4.18-3.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/3ea916c72412d3a7efd8c70cfa1ed18863c018091001b631390b19c454136b87",
-    ],
-)
-
-rpm(
-    name = "libxml2-0__2.12.8-2.fc41.riscv64",
-    sha256 = "04dce5350d1e6a81e9bac791d8284fe347f71615210403ae9edff07cf2e2d1af",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libxml2/2.12.8/2.fc41/riscv64/libxml2-2.12.8-2.fc41.riscv64.rpm",
     ],
 )
 
@@ -3896,14 +3172,6 @@ rpm(
 )
 
 rpm(
-    name = "libzstd-0__1.5.6-2.fc41.riscv64",
-    sha256 = "42d6c01dec0aef064e9a85f0e97353a70700227e1639aaa37d94af5af40820b8",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/zstd/1.5.6/2.fc41/riscv64/libzstd-1.5.6-2.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "lz4-libs-0__1.9.3-5.el9.aarch64",
     sha256 = "9aa14d26393dd46c0a390cf04f939f7f759a33165bdb506f8bee0653f3b70f45",
     urls = [
@@ -3927,14 +3195,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/lz4-libs-1.9.3-5.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/cba6a63054d070956a182e33269ee245bcfbe87e3e605c27816519db762a66ad",
-    ],
-)
-
-rpm(
-    name = "mpdecimal-0__2.5.1-16.fc41.riscv64",
-    sha256 = "1f09936294d6f49cb99893e7bf4ea091c73a659c2af39f65e0313c581530ff0d",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/mpdecimal/2.5.1/16.fc41/riscv64/mpdecimal-2.5.1-16.fc41.riscv64.rpm",
     ],
 )
 
@@ -3966,14 +3226,6 @@ rpm(
 )
 
 rpm(
-    name = "mpfr-0__4.2.1-5.fc41.riscv64",
-    sha256 = "5304a39ada08f201e365f41bf9153f4e069c70ca320985571c1721eebbba4297",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/mpfr/4.2.1/5.fc41/riscv64/mpfr-4.2.1-5.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "nbdkit-basic-filters-0__1.38.5-6.el9.aarch64",
     sha256 = "62c1b0443f9ac3673bda702c80a697c28a91784ca2d82811a9790e0a75c07f2a",
     urls = [
@@ -3997,14 +3249,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/nbdkit-basic-filters-1.38.5-6.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/c4f6d2941b703ff272b563f72f899dae9e7466e0cb51083a45e2338d5c14ec90",
-    ],
-)
-
-rpm(
-    name = "nbdkit-basic-filters-0__1.39.8-1.fc41.riscv64",
-    sha256 = "d8ff933c79de3e9db000790bf23043ec5f6e7a297eb30a7a161efc9379436404",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nbdkit/1.39.8/1.fc41/riscv64/nbdkit-basic-filters-1.39.8-1.fc41.riscv64.rpm",
     ],
 )
 
@@ -4036,14 +3280,6 @@ rpm(
 )
 
 rpm(
-    name = "nbdkit-curl-plugin-0__1.39.8-1.fc41.riscv64",
-    sha256 = "559e1e86aca26ff5a4436bfa23e0cfb145c4bd944bcba238d42d6896d39090b1",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nbdkit/1.39.8/1.fc41/riscv64/nbdkit-curl-plugin-1.39.8-1.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "nbdkit-gzip-filter-0__1.38.5-6.el9.aarch64",
     sha256 = "b846ea4baca31d9dfb2d390dec67dc6cdf272065c0f9291a4a4c14f3fa3fa3e0",
     urls = [
@@ -4071,14 +3307,6 @@ rpm(
 )
 
 rpm(
-    name = "nbdkit-gzip-filter-0__1.39.8-1.fc41.riscv64",
-    sha256 = "9214935356732fc729f74764b566ad0fc55f41a9e3309ce17e012cacc14edeed",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nbdkit/1.39.8/1.fc41/riscv64/nbdkit-gzip-filter-1.39.8-1.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "nbdkit-server-0__1.38.5-6.el9.aarch64",
     sha256 = "4181b5e3203027480b745454a1f655cc79b88bb19bd037f223fce9c5ff983935",
     urls = [
@@ -4102,14 +3330,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/nbdkit-server-1.38.5-6.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/74349b2879cf603e0c6aacc7604d6f9ebaa3751eecd70f25c4701edc9b17b778",
-    ],
-)
-
-rpm(
-    name = "nbdkit-server-0__1.39.8-1.fc41.riscv64",
-    sha256 = "5c6e3e7f58c768b02a013475140b1a0b4251ed20e709551a5ec820dcd77f733f",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nbdkit/1.39.8/1.fc41/riscv64/nbdkit-server-1.39.8-1.fc41.riscv64.rpm",
     ],
 )
 
@@ -4146,14 +3366,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/nbdkit-xz-filter-1.38.5-6.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/fa13814047dbca423dc69400ed83d3fc2b6f3620e193e246e01752398404ede9",
-    ],
-)
-
-rpm(
-    name = "nbdkit-xz-filter-0__1.39.8-1.fc41.riscv64",
-    sha256 = "6168ad6d9ce5f282c5b9f205b9d33baadf613d9a6177fa5b4c0567fb2a5a4a25",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nbdkit/1.39.8/1.fc41/riscv64/nbdkit-xz-filter-1.39.8-1.fc41.riscv64.rpm",
     ],
 )
 
@@ -4203,14 +3415,6 @@ rpm(
 )
 
 rpm(
-    name = "ncurses-base-0__6.5-2.20240629.fc41.riscv64",
-    sha256 = "edb982f88132ba0ecb9da7cefe0dbc56b8098360b9cc954cbe352e8902a54b0f",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/ncurses/6.5/2.20240629.fc41/noarch/ncurses-base-6.5-2.20240629.fc41.noarch.rpm",
-    ],
-)
-
-rpm(
     name = "ncurses-libs-0__6.2-10.20210508.el9.aarch64",
     sha256 = "0ccfc9eeb99be404367bf6157db2d1a6fb9ed479247f578501594e08e8f7080c",
     urls = [
@@ -4256,22 +3460,6 @@ rpm(
 )
 
 rpm(
-    name = "ncurses-libs-0__6.5-2.20240629.fc41.riscv64",
-    sha256 = "33b4354e428f4c800c1f2001eb77da4915f3c143bc53dc2a9ac14acdd78ba639",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/ncurses/6.5/2.20240629.fc41/riscv64/ncurses-libs-6.5-2.20240629.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
-    name = "netavark-2__1.13.0-1.fc41.riscv64",
-    sha256 = "c355b650d67482587fcdf96987b0a26750994021397a058be3d9a6bc87842ca2",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/netavark/1.13.0/1.fc41/riscv64/netavark-1.13.0-1.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "netavark-2__1.14.0-1.el9.aarch64",
     sha256 = "1ea6813c91d57a5997c23b8a697ac08fae8bb2bd2ccfe3613a464250495651fc",
     urls = [
@@ -4295,14 +3483,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/netavark-1.14.0-1.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/9efa916b65d1c7b8c6902a3718dc1b7cafb220d109c4152be50361018776f05d",
-    ],
-)
-
-rpm(
-    name = "nettle-0__3.10-3.fc41.riscv64",
-    sha256 = "a0f3100de9a0a4609e004dafdfcedc5b208d17c4d2efdb7d47bc9a907d8284f5",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nettle/3.10/3.fc41/riscv64/nettle-3.10-3.fc41.riscv64.rpm",
     ],
 )
 
@@ -4379,14 +3559,6 @@ rpm(
 )
 
 rpm(
-    name = "nftables-1__1.0.9-7.fc41.riscv64",
-    sha256 = "6cc5c6dc3961e5932387b53b34f56ca4524c41c0422a9d10e411d63bdc3636b5",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nftables/1.0.9/7.fc41/riscv64/nftables-1.0.9-7.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "nginx-1__1.22.1-4.module_el9__plus__666__plus__132dc76f.aarch64",
     sha256 = "73f304462d847fd7324ed9d578c8fcf31bf7f9a15dd04097b7bd757670531c33",
     urls = [
@@ -4410,14 +3582,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/nginx-1.22.1-4.module_el9+666+132dc76f.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/6a6e8247840fdd4f8328f94701a7a3649903c8d8fd72aaec9b214a9dad690e5c",
-    ],
-)
-
-rpm(
-    name = "nginx-2__1.26.2-1.fc41.riscv64",
-    sha256 = "48127f48fb50db392c7f3c436e528c5761f1186a37a0296c424b82b4fdeb64fd",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nginx/1.26.2/1.fc41/riscv64/nginx-1.26.2-1.fc41.riscv64.rpm",
     ],
 )
 
@@ -4449,14 +3613,6 @@ rpm(
 )
 
 rpm(
-    name = "nginx-core-2__1.26.2-1.fc41.riscv64",
-    sha256 = "82751b5f24e77ae8386dd8f73a3c8a8225f31a83617012da097027143ef8e5ea",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nginx/1.26.2/1.fc41/riscv64/nginx-core-1.26.2-1.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "nginx-filesystem-1__1.22.1-4.module_el9__plus__666__plus__132dc76f.aarch64",
     sha256 = "8e564ab711b4a60b769a970dc03fb7a32e6441bf9e761321e3f0a24080491eb2",
     urls = [
@@ -4480,22 +3636,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/nginx-filesystem-1.22.1-4.module_el9+666+132dc76f.noarch.rpm",
         "https://storage.googleapis.com/builddeps/8e564ab711b4a60b769a970dc03fb7a32e6441bf9e761321e3f0a24080491eb2",
-    ],
-)
-
-rpm(
-    name = "nginx-filesystem-2__1.26.2-1.fc41.riscv64",
-    sha256 = "64fc1f00ad657183a9c03f3ad72b8ac2b5aac54aaf9c8fae2723084bb784ed4c",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nginx/1.26.2/1.fc41/noarch/nginx-filesystem-1.26.2-1.fc41.noarch.rpm",
-    ],
-)
-
-rpm(
-    name = "nginx-mimetypes-0__2.1.54-7.fc41.riscv64",
-    sha256 = "69aa59d78db2dc736d083f41899063c087239d76d4ae21b2151d344d6a69e447",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/mailcap/2.1.54/7.fc41/noarch/nginx-mimetypes-2.1.54-7.fc41.noarch.rpm",
     ],
 )
 
@@ -4527,14 +3667,6 @@ rpm(
 )
 
 rpm(
-    name = "npth-0__1.7-2.fc41.riscv64",
-    sha256 = "672ff4feabb7655065b0b4de11fa4cbd8566b57b275065bf0d4d35c7f891673c",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/npth/1.7/2.fc41/riscv64/npth-1.7-2.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "numactl-libs-0__2.0.19-1.el9.aarch64",
     sha256 = "40f7ef0c0fd573c86227a56b25352c731f41d75acd25d7c7a10c2167bb9aaf74",
     urls = [
@@ -4549,14 +3681,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/numactl-libs-2.0.19-1.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/3abe41a330364e2e1bf905458de8c0314f0ac3082e6cc475149bd9b2ffdeb428",
-    ],
-)
-
-rpm(
-    name = "numactl-libs-0__2.0.19-1.fc41.riscv64",
-    sha256 = "9e89399bb0b161c91b39e8c27c462662a45269be956dab624cbd42267dea11f5",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/numactl/2.0.19/1.fc41/riscv64/numactl-libs-2.0.19-1.fc41.riscv64.rpm",
     ],
 )
 
@@ -4588,22 +3712,6 @@ rpm(
 )
 
 rpm(
-    name = "openldap-0__2.6.8-5.fc41.riscv64",
-    sha256 = "83d1568424f2a9f7a96f4404d118578349593220fe606c689126ff7b8bec0278",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/openldap/2.6.8/5.fc41/riscv64/openldap-2.6.8-5.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
-    name = "openssl-1__3.2.2-9.fc41.riscv64",
-    sha256 = "3db8424ccd3d6bef3c49ec253cb75429f08bc28d1147cff813e7507a5156e090",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/openssl/3.2.2/9.fc41/riscv64/openssl-3.2.2-9.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "openssl-1__3.5.0-1.el9.aarch64",
     sha256 = "53572b5f56597594eb8036506404909348968309b60f0ad5aaa4229d7e1a4d89",
     urls = ["https://storage.googleapis.com/builddeps/53572b5f56597594eb8036506404909348968309b60f0ad5aaa4229d7e1a4d89"],
@@ -4631,14 +3739,6 @@ rpm(
     name = "openssl-libs-1__3.0.1-18.el9.x86_64",
     sha256 = "cbe97622a4d4dbd00e2264a5f96087805af03717dfb842dbb6b6412be8f24e99",
     urls = ["https://storage.googleapis.com/builddeps/cbe97622a4d4dbd00e2264a5f96087805af03717dfb842dbb6b6412be8f24e99"],
-)
-
-rpm(
-    name = "openssl-libs-1__3.2.2-9.fc41.riscv64",
-    sha256 = "958122581b9b2313a716109aa5a0586d44e3e01165aea3ee99ad4254291fc64a",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/openssl/3.2.2/9.fc41/riscv64/openssl-libs-3.2.2-9.fc41.riscv64.rpm",
-    ],
 )
 
 rpm(
@@ -4735,14 +3835,6 @@ rpm(
 )
 
 rpm(
-    name = "p11-kit-0__0.25.5-3.fc41.riscv64",
-    sha256 = "80382add0289d5df3fa47d1858caeb5ff07a8aabf4ab8a39267d596208cb26bb",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/p11-kit/0.25.5/3.fc41/riscv64/p11-kit-0.25.5-3.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "p11-kit-trust-0__0.24.1-2.el9.aarch64",
     sha256 = "80e288a5b62f20f7794674c6fdf2f0765a322cd0e81df9359e37582fe950289c",
     urls = [
@@ -4788,14 +3880,6 @@ rpm(
 )
 
 rpm(
-    name = "p11-kit-trust-0__0.25.5-3.fc41.riscv64",
-    sha256 = "0d29e5c38beb88b3b3ea7b1ea13f5f0bdcdbce0f01adb48f7d8679ac66f5380a",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/p11-kit/0.25.5/3.fc41/riscv64/p11-kit-trust-0.25.5-3.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "pam-0__1.5.1-23.el9.aarch64",
     sha256 = "29b59cfdd2eee4f243f32b623c03b66fdce44d2ab6ac6b72843e76ee94460946",
     urls = [
@@ -4819,22 +3903,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/pam-1.5.1-23.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/fba392096cbf59204549bca23d4060cdf8aaaa9ce35ade8194c111f519033e10",
-    ],
-)
-
-rpm(
-    name = "pam-libs-0__1.6.1-5.fc41.riscv64",
-    sha256 = "9caf0127b134469a68ce23b067867838acbd6b14e03aea216831cf8d33f1812d",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/pam/1.6.1/5.fc41/riscv64/pam-libs-1.6.1-5.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
-    name = "passt-0__0__caret__20241030.gee7d0b6-1.fc41.riscv64",
-    sha256 = "3e186b272e49ecb3c3b2d98e7143011a3c802bb5c35a6eb7724ee4177a468a3e",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/passt/0%5E20241030.gee7d0b6/1.fc41/riscv64/passt-0%5E20241030.gee7d0b6-1.fc41.riscv64.rpm",
     ],
 )
 
@@ -4950,14 +4018,6 @@ rpm(
 )
 
 rpm(
-    name = "pcre2-0__10.44-1.fc41.1.riscv64",
-    sha256 = "de254d3d6e092df92c12146a404a39a394ad6dba056b59ee5216058ea5c636cc",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/pcre2/10.44/1.fc41.1/riscv64/pcre2-10.44-1.fc41.1.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "pcre2-syntax-0__10.37-3.el9.1.aarch64",
     sha256 = "55d7d2bc962334c236418b78199a496b05dea4efdc89e52453154bd1a5ad0e2e",
     urls = ["https://storage.googleapis.com/builddeps/55d7d2bc962334c236418b78199a496b05dea4efdc89e52453154bd1a5ad0e2e"],
@@ -4997,30 +4057,6 @@ rpm(
 )
 
 rpm(
-    name = "pcre2-syntax-0__10.44-1.fc41.1.riscv64",
-    sha256 = "f60bf5d33a74be6a035275db9101e38f096331ad1cd41ed345c358fbea1b4813",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/pcre2/10.44/1.fc41.1/noarch/pcre2-syntax-10.44-1.fc41.1.noarch.rpm",
-    ],
-)
-
-rpm(
-    name = "python-pip-wheel-0__24.2-1.fc41.riscv64",
-    sha256 = "ec8e52ebfc3b0fd870616898aa101a32369e2140ae81be55bc0aed9ae3b8d8de",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/python-pip/24.2/1.fc41/noarch/python-pip-wheel-24.2-1.fc41.noarch.rpm",
-    ],
-)
-
-rpm(
-    name = "python3-0__3.13.0-1.fc41.riscv64",
-    sha256 = "f1c29002ab8aecc6b79456bb38effcfa53b33c1c6bed1b58d78d4e6a8e71cc47",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/python3.13/3.13.0/1.fc41/riscv64/python3-3.13.0-1.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "python3-0__3.9.21-2.el9.aarch64",
     sha256 = "91e1a87884c23995332a26133d50b133c1a001195ba0381de8149bf7e15bfbf8",
     urls = [
@@ -5044,14 +4080,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/python3-3.9.21-2.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/86c570c2497d8499be137b5051ad245100b6a19031e32e7ce14c3f1e891aa875",
-    ],
-)
-
-rpm(
-    name = "python3-libs-0__3.13.0-1.fc41.riscv64",
-    sha256 = "44f7e6675512a019567aae6f8b12f1f4120e956cdc82aea2f64d35c766c68ad8",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/python3.13/3.13.0/1.fc41/riscv64/python3-libs-3.13.0-1.fc41.riscv64.rpm",
     ],
 )
 
@@ -5152,14 +4180,6 @@ rpm(
 )
 
 rpm(
-    name = "python3-pycurl-0__7.45.3-4.fc41.riscv64",
-    sha256 = "f609105175ce027ab480b48bc745a5c14386892de4bbda9cf6789d92a2e63628",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/python-pycurl/7.45.3/4.fc41/riscv64/python3-pycurl-7.45.3-4.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "python3-setuptools-wheel-0__53.0.0-14.el9.aarch64",
     sha256 = "f48fc3928f427b3675bc52a9259010b64d6c3f2db6ae5885c13b5ecc7f69ef81",
     urls = [
@@ -5214,14 +4234,6 @@ rpm(
 )
 
 rpm(
-    name = "python3-six-0__1.16.0-21.fc41.riscv64",
-    sha256 = "c3cdcb87b62655355c7dfad43ce2967fd8632981bfc2c05a639ff34390a216d3",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/python-six/1.16.0/21.fc41/noarch/python3-six-1.16.0-21.fc41.noarch.rpm",
-    ],
-)
-
-rpm(
     name = "python3-systemd-0__234-19.el9.aarch64",
     sha256 = "c5bc7ec403ee44fe1e479d392f87309c0ab0c86632c3515cc867882e82bbd679",
     urls = [
@@ -5245,14 +4257,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/python3-systemd-234-19.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/10ce18f02053671942ae5dc165c95cb195a50c309b90159e006214da2c953ea0",
-    ],
-)
-
-rpm(
-    name = "python3-systemd-0__235-11.fc41.riscv64",
-    sha256 = "d5d4b3c75a25cd966b650e61b7363474cecd267ead757ddba2403d2ff6920cf1",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/python-systemd/235/11.fc41/riscv64/python3-systemd-235-11.fc41.riscv64.rpm",
     ],
 )
 
@@ -5287,14 +4291,6 @@ rpm(
 )
 
 rpm(
-    name = "qemu-img-2__9.0.0-1.fc41.riscv64",
-    sha256 = "244f5db03234b31d4aede21b3bf65263b60419c997638595316adf4689686157",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/qemu/9.0.0/1.fc41/riscv64/qemu-img-9.0.0-1.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "readline-0__8.1-4.el9.aarch64",
     sha256 = "2ecec47a882ff434cc869b691a7e1e8d7639bc1af44bcb214ff4921f675776aa",
     urls = [
@@ -5322,22 +4318,6 @@ rpm(
 )
 
 rpm(
-    name = "readline-0__8.2-10.fc41.riscv64",
-    sha256 = "9bc149bc8b7cc9eca89b4d5138e9f7d0e99a957245f5889e3e42f74f5ac35f0e",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/readline/8.2/10.fc41/riscv64/readline-8.2-10.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
-    name = "runc-2__1.2.1-1.fc41.riscv64",
-    sha256 = "3185a612ded60ff7e0f635bb129eb4aaa396dee47aebb57bccfcca8d849aa26f",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/runc/1.2.1/1.fc41/riscv64/runc-1.2.1-1.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "sed-0__4.8-9.el9.aarch64",
     sha256 = "cfdec0f026af984c11277ae613f16af7a86ea6170aac3da495a027599fdc8e3d",
     urls = [
@@ -5361,14 +4341,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/sed-4.8-9.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/a2c5d9a7f569abb5a592df1c3aaff0441bf827c9d0e2df0ab42b6c443dbc475f",
-    ],
-)
-
-rpm(
-    name = "sed-0__4.9-3.fc41.riscv64",
-    sha256 = "df23537e0a45574aff495a978c7c5e2a2060dc61ab7e23e6488e467720021b1a",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/sed/4.9/3.fc41/riscv64/sed-4.9-3.fc41.riscv64.rpm",
     ],
 )
 
@@ -5418,22 +4390,6 @@ rpm(
 )
 
 rpm(
-    name = "setup-0__2.15.0-5.fc41.riscv64",
-    sha256 = "210ca09542cfaa1f1d67b43eaf9b9db817f2ea7cea97e1cce68335c0666cf0da",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/setup/2.15.0/5.fc41/noarch/setup-2.15.0-5.fc41.noarch.rpm",
-    ],
-)
-
-rpm(
-    name = "shadow-utils-2__4.15.1-12.fc41.riscv64",
-    sha256 = "c50bbaa650f2eec70e693cd23d7877628a3ac90e1917ab9f512cc91ac688cbb9",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/shadow-utils/4.15.1/12.fc41/riscv64/shadow-utils-4.15.1-12.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "shadow-utils-2__4.9-12.el9.aarch64",
     sha256 = "37f2e7bbe372bcceaa50f9d36bdc821e6ec13092a580f22c2e15d08a5c5c46ac",
     urls = [
@@ -5457,14 +4413,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/shadow-utils-4.9-12.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/23f14143a188cf9bf8a0315f930fbeeb0ad34c58357007a52d112c5f8b6029e0",
-    ],
-)
-
-rpm(
-    name = "shadow-utils-subid-2__4.15.1-12.fc41.riscv64",
-    sha256 = "45d55609ec9c2c7fb1d282967c9627c00a281a3582d0c2918ff4804b281e0ece",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/shadow-utils/4.15.1/12.fc41/riscv64/shadow-utils-subid-4.15.1-12.fc41.riscv64.rpm",
     ],
 )
 
@@ -5523,14 +4471,6 @@ rpm(
 )
 
 rpm(
-    name = "sqlite-libs-0__3.46.1-1.fc41.riscv64",
-    sha256 = "fdbe691db12dbab6c9fafc66de5629a72185d61538f095f0c13e2334669854ac",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/sqlite/3.46.1/1.fc41/riscv64/sqlite-libs-3.46.1-1.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "systemd-0__252-53.el9.aarch64",
     sha256 = "522e7b48e01bd5b97db036327c2e02f246a362cf95a9cca780c704f2bc995d55",
     urls = [
@@ -5554,14 +4494,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/systemd-252-53.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/914c148a1b6f9bba358beb3b6a8158c3227e030e4bda10daaa29150c8a4dec14",
-    ],
-)
-
-rpm(
-    name = "systemd-0__256.8-1.fc41.riscv64",
-    sha256 = "6900272b22d35f953c8cae0cace2f14ca4a61c4b32c7417fa444d2f135505508",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/systemd/256.8/1.fc41/riscv64/systemd-256.8-1.fc41.riscv64.rpm",
     ],
 )
 
@@ -5605,14 +4537,6 @@ rpm(
 )
 
 rpm(
-    name = "systemd-libs-0__256.8-1.fc41.riscv64",
-    sha256 = "c14df011c5cf8e472916ecd8e9ea8584ce337d5c0c1cc43a457bd7b0b3ebc10a",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/systemd/256.8/1.fc41/riscv64/systemd-libs-256.8-1.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "systemd-pam-0__252-53.el9.aarch64",
     sha256 = "978eedb2909378caeae810043129a73bb2ae66c9f57ce0167bb636007ebaaf37",
     urls = [
@@ -5636,14 +4560,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/systemd-pam-252-53.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/9dd7d630e51b4d644d37cd2d472acb153b9ac3ac8b1d5adffdf724a3c3775008",
-    ],
-)
-
-rpm(
-    name = "systemd-pam-0__256.8-1.fc41.riscv64",
-    sha256 = "78ef17e8af1e1c33e9ecf5e5c59be873641c310b9c19cd6696e98ef1b8731109",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/systemd/256.8/1.fc41/riscv64/systemd-pam-256.8-1.fc41.riscv64.rpm",
     ],
 )
 
@@ -5702,22 +4618,6 @@ rpm(
 )
 
 rpm(
-    name = "tar-2__1.35-4.fc41.riscv64",
-    sha256 = "2a6a681befdc48d63e990528f2d7db0dbdce5838da1e821ef5fc94a7f45cfa34",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/tar/1.35/4.fc41/riscv64/tar-1.35-4.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
-    name = "tpm2-tss-0__4.1.3-3.fc41.riscv64",
-    sha256 = "4c630cb2a7eed9a0f3c903576d0b99cc9b1f43cd968d5f0a3a10f80ee78b8988",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/tpm2-tss/4.1.3/3.fc41/riscv64/tpm2-tss-4.1.3-3.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "tzdata-0__2021e-1.el9.aarch64",
     sha256 = "42d89577a0f887c4baa162250862dea2c1830b1ced56c45ced9645ad8e2a3671",
     urls = ["https://storage.googleapis.com/builddeps/42d89577a0f887c4baa162250862dea2c1830b1ced56c45ced9645ad8e2a3671"],
@@ -5727,14 +4627,6 @@ rpm(
     name = "tzdata-0__2021e-1.el9.x86_64",
     sha256 = "42d89577a0f887c4baa162250862dea2c1830b1ced56c45ced9645ad8e2a3671",
     urls = ["https://storage.googleapis.com/builddeps/42d89577a0f887c4baa162250862dea2c1830b1ced56c45ced9645ad8e2a3671"],
-)
-
-rpm(
-    name = "tzdata-0__2024a-9.fc41.riscv64",
-    sha256 = "2a1650af9d1e8aaaeef3a8a11523c6962bf02df84ef27e7c74e5635f7be2998a",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/tzdata/2024a/9.fc41/noarch/tzdata-2024a-9.fc41.noarch.rpm",
-    ],
 )
 
 rpm(
@@ -5831,22 +4723,6 @@ rpm(
 )
 
 rpm(
-    name = "util-linux-core-0__2.40.2-4.fc41.riscv64",
-    sha256 = "c03ab965cba13e7f400d22c2c1e1fd3c8ed4915f2eb93785c50cb4d6321428f0",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/util-linux/2.40.2/4.fc41/riscv64/util-linux-core-2.40.2-4.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
-    name = "vim-data-2__9.1.825-1.fc41.riscv64",
-    sha256 = "df33456adc4ca79e3d9984a74b55c3e18760972ae32b67ed197aef996e7ae692",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/vim/9.1.825/1.fc41/noarch/vim-data-9.1.825-1.fc41.noarch.rpm",
-    ],
-)
-
-rpm(
     name = "vim-minimal-2__8.2.2637-15.el9.aarch64",
     sha256 = "14136f426b9425d7c66bc6a5cace746b84b0bcf436e58144d782d993998da7da",
     urls = [
@@ -5892,14 +4768,6 @@ rpm(
 )
 
 rpm(
-    name = "vim-minimal-2__9.1.825-1.fc41.riscv64",
-    sha256 = "47fb20ee904fbe0d348b9e16f68424f9681afc1396c8a17fc9b22de32f57aef4",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/vim/9.1.825/1.fc41/riscv64/vim-minimal-9.1.825-1.fc41.riscv64.rpm",
-    ],
-)
-
-rpm(
     name = "xz-libs-0__5.2.5-7.el9.aarch64",
     sha256 = "49c5e788208a6e2e458d6bdaf8bde5b834eb32693810b90b4354c4c47695b453",
     urls = [
@@ -5941,14 +4809,6 @@ rpm(
     urls = [
         "http://mirror.stream.centos.org/9-stream/BaseOS/x86_64/os/Packages/xz-libs-5.2.5-8.el9.x86_64.rpm",
         "https://storage.googleapis.com/builddeps/ff3c88297d75c51a5f8e9d2d69f8ad1eaf8347e20920b4335a3e0fc53269ad28",
-    ],
-)
-
-rpm(
-    name = "xz-libs-1__5.6.3-1.fc41.riscv64",
-    sha256 = "4e3df148bdadd9c1488e1fb5c200924ae89965adee4c65fe0c7e1f84c9c084ec",
-    urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/xz/5.6.3/1.fc41/riscv64/xz-libs-5.6.3-1.fc41.riscv64.rpm",
     ],
 )
 
@@ -6018,11 +4878,1124 @@ rpm(
     ],
 )
 
+
 rpm(
-    name = "zlib-ng-0__2.1.7-3.fc41.riscv64",
-    sha256 = "bed28fc8a5717c98f23fe9fadc13b886a0cd85f86e08250016a97c80045d5076",
+    name = "aardvark-dns-2__1.13.1-1.fc41.riscv64",
+    sha256 = "ebdcc24964841d9949ba1978c1350255eab53e477f6303f93d1e8f29c4f6d096",
     urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/zlib-ng/2.1.7/3.fc41/riscv64/zlib-ng-2.1.7-3.fc41.riscv64.rpm",
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/aardvark-dns/1.13.1/1.fc41/riscv64/aardvark-dns-1.13.1-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "acl-0__2.3.2-2.fc41.riscv64",
+    sha256 = "28208fbdfae3ecb38ba3d1ada581e2df4ffee7b16ad49441a6c81aaf6a5fad8a",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/acl/2.3.2/2.fc41/riscv64/acl-2.3.2-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "audit-libs-0__4.0.2-1.fc41.riscv64",
+    sha256 = "b1171c0b8851c08995b1117213a6a935aa70d4d3e9c0940a20d5d4c1196fba82",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/audit/4.0.2/1.fc41/riscv64/audit-libs-4.0.2-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "basesystem-0__11-21.fc41.noarch",
+    sha256 = "2a6e5bc318ed8e6afef275023ae44191fd2cc87f6458b3ffd3337ec6cecfa3af",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/basesystem/11/21.fc41/noarch/basesystem-11-21.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "bash-0__5.2.32-1.fc41.riscv64",
+    sha256 = "08117a5690952ab250132de25d9f8f6c0d7c78c460be608407bf9a7c5ccfbb32",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/bash/5.2.32/1.fc41/riscv64/bash-5.2.32-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "buildah-2__1.38.0-2.fc41.riscv64",
+    sha256 = "8f047ff64486de7cdff812d9fa2ee7e318bdbd15d734ed41fabb8b0543342f9f",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/buildah/1.38.0/2.fc41/riscv64/buildah-1.38.0-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "bzip2-libs-0__1.0.8-19.fc41.riscv64",
+    sha256 = "56a896e3de3f838e449b2593c3b7a06483824f980e3bcc2e1e0d605025d8e9ad",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/bzip2/1.0.8/19.fc41/riscv64/bzip2-libs-1.0.8-19.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "ca-certificates-0__2024.2.69_v8.0.401-1.0.fc41.noarch",
+    sha256 = "4100975d09dd564c2fa9c70ddae861dc0ef7096234dd1370d5aa036995b27f2a",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/ca-certificates/2024.2.69_v8.0.401/1.0.fc41/noarch/ca-certificates-2024.2.69_v8.0.401-1.0.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "containers-common-5__0.61.0-1.fc41.noarch",
+    sha256 = "619fb5d59e3ff8d6668bbb19b17834c799bf4cef3c9f6651f7539b4bb8250ab6",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/containers-common/0.61.0/1.fc41/noarch/containers-common-0.61.0-1.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "containers-common-extra-5__0.61.0-1.fc41.noarch",
+    sha256 = "6bfaa9ab6131bf3ccd0d63fb8dfbe206e8b81715aee4886ff3bec8d3c1b9f5c5",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/containers-common/0.61.0/1.fc41/noarch/containers-common-extra-0.61.0-1.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "coreutils-0__9.5-11.fc41.riscv64",
+    sha256 = "71c19c3f832b093f5746adbacc9cdc5a3f95be4418f52fde0d41637d7b9a3076",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/coreutils/9.5/11.fc41/riscv64/coreutils-9.5-11.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "coreutils-common-0__9.5-11.fc41.riscv64",
+    sha256 = "a003a97b28afdf4c969f6bbdf8db6a43ae79b336177825c8a991d8f9d6867970",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/coreutils/9.5/11.fc41/riscv64/coreutils-common-9.5-11.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "coreutils-single-0__9.5-11.fc41.riscv64",
+    sha256 = "a107464cd19f224eabd2347d3f3655ca46147eb0d23496e2f95ea43506bb408f",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/coreutils/9.5/11.fc41/riscv64/coreutils-single-9.5-11.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "crypto-policies-0__20241029-1.git8baf557.fc41.noarch",
+    sha256 = "c7cc137ea18ab4a3578c3020e4322f4f6ff1ba61a314ae49932b4acba4082cbf",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/crypto-policies/20241029/1.git8baf557.fc41/noarch/crypto-policies-20241029-1.git8baf557.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "crypto-policies-scripts-0__20241029-1.git8baf557.fc41.noarch",
+    sha256 = "eae760abd0887d5d2d6d97a5310e3c408d8705f2072cb4d454b7f49108d39746",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/crypto-policies/20241029/1.git8baf557.fc41/noarch/crypto-policies-scripts-20241029-1.git8baf557.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "curl-0__8.9.1-2.fc41.riscv64",
+    sha256 = "8d9934651a84c560d696e9cacc3c7bf3f3b7590438faee17b2445d6a1b1c8add",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/curl/8.9.1/2.fc41/riscv64/curl-8.9.1-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "cyrus-sasl-lib-0__2.1.28-27.fc41.riscv64",
+    sha256 = "f81c30f33311c288bc64e74d777a7e0ab7608125a2b25faa018ac206d7d39aac",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/cyrus-sasl/2.1.28/27.fc41/riscv64/cyrus-sasl-lib-2.1.28-27.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "dbus-1__1.14.10-4.fc41.riscv64",
+    sha256 = "c7dcf36ab75ba792185e122e679b03b2a2853b7969cfd86be02bcca80e76d97e",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/dbus/1.14.10/4.fc41/riscv64/dbus-1.14.10-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "dbus-broker-0__36-4.fc41.riscv64",
+    sha256 = "27d28a86383b8ebfa961ec4d6445f99c9d7c3ae1e14816cea813b9cbc3e981b3",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/dbus-broker/36/4.fc41/riscv64/dbus-broker-36-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "dbus-common-1__1.14.10-4.fc41.noarch",
+    sha256 = "66c3201b59f2aec07e08dff239d02813193d81a414ad4f267bf7889b1daa941d",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/dbus/1.14.10/4.fc41/noarch/dbus-common-1.14.10-4.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "expat-0__2.6.4-1.fc41.riscv64",
+    sha256 = "419dbbb3317792a799d032618f6efbf9b9060d64d782d8450365e604a3f2e920",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/expat/2.6.4/1.fc41/riscv64/expat-2.6.4-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "fedora-gpg-keys-0__41-1.2.rv64.noarch",
+    sha256 = "e9d1a3da9aeb877b92fbd232cbd133bd8bc1bce8e98c6dfcbed0ea719e366c36",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/fedora-repos/41/1.2.rv64/noarch/fedora-gpg-keys-41-1.2.rv64.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "fedora-logos-httpd-0__38.1.0-6.fc41.noarch",
+    sha256 = "9646d79d808afbd9611d69a15d9956be2446348dfc4d934f670af0c8e85337e5",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/fedora-logos/38.1.0/6.fc41/noarch/fedora-logos-httpd-38.1.0-6.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "fedora-release-0__41-29.noarch",
+    sha256 = "e20f410bc1853b5b4fc2cc1a90b0f158f8aff802707514907f4d3da4614913ce",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/fedora-release/41/29/noarch/fedora-release-41-29.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "fedora-release-common-0__41-29.noarch",
+    sha256 = "a90a176142e148eaa8fbcc85983c13fb8759f222e4ee534f1334717ce2d9deda",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/fedora-release/41/29/noarch/fedora-release-common-41-29.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "fedora-release-identity-basic-0__41-29.noarch",
+    sha256 = "e810c54646f7c2e3ac746006c1f749a345a7d05d15c782928037b4b205397a5d",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/fedora-release/41/29/noarch/fedora-release-identity-basic-41-29.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "fedora-repos-0__41-1.2.rv64.noarch",
+    sha256 = "4a7867c4b04add6da20e7f027d0cad1185a24bbb563f77be5194452162a35087",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/fedora-repos/41/1.2.rv64/noarch/fedora-repos-41-1.2.rv64.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "filesystem-0__3.18-24.fc41.riscv64",
+    sha256 = "0b5053e4c83ae165380cff6e607b0f2e086eb6a8f3582e86e15bd946ef564a8f",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/filesystem/3.18/24.fc41/riscv64/filesystem-3.18-24.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "fuse3-libs-0__3.16.2-4.fc41.riscv64",
+    sha256 = "59e92b4d6c9850bc5b2ac4532595aaeb978dc4ea8b4733f2b54472cf8bef44c1",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/fuse3/3.16.2/4.fc41/riscv64/fuse3-libs-3.16.2-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "gawk-0__5.3.0-4.fc41.riscv64",
+    sha256 = "f9f3dec04f7bbaf9fd908a28efff592e1856c035ef8f121d190a0479ead49a25",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gawk/5.3.0/4.fc41/riscv64/gawk-5.3.0-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "gdbm-libs-1__1.23-7.fc41.riscv64",
+    sha256 = "71cf5f0789f6a757efab03111f67e87435cfe1129c816dee3c11dba15681709f",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gdbm/1.23/7.fc41/riscv64/gdbm-libs-1.23-7.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "glib2-0__2.82.1-2.fc41.riscv64",
+    sha256 = "5125ae286d03f8ac84963cd00e92bb5d407888be670c30b5beeea3963ecaa305",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/glib2/2.82.1/2.fc41/riscv64/glib2-2.82.1-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "glibc-0__2.40-4.fc41.riscv64",
+    sha256 = "84671a13852f227a091c46030f00f045fdd5ea46c3c326c701dfa2dcf058249c",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/glibc/2.40/4.fc41/riscv64/glibc-2.40-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "glibc-all-langpacks-0__2.40-4.fc41.riscv64",
+    sha256 = "700f22c14aee9d41a3fd01d6702ac565f731496eb37866a60ca53fb3d1f3b761",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/glibc/2.40/4.fc41/riscv64/glibc-all-langpacks-2.40-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "glibc-common-0__2.40-4.fc41.riscv64",
+    sha256 = "030874c41cb6fb197349dbe95730ae70ed515b07ecce26b8201a19366faefd69",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/glibc/2.40/4.fc41/riscv64/glibc-common-2.40-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "glibc-minimal-langpack-0__2.40-4.fc41.riscv64",
+    sha256 = "2b52676c5f6abfeb7e72226a01fa472a95681ef26499cadd00b7612777d61020",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/glibc/2.40/4.fc41/riscv64/glibc-minimal-langpack-2.40-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "gmp-1__6.3.0-2.fc41.riscv64",
+    sha256 = "6c5b290fdf1fbccf0915e1023d75512fe81a3a79b806b03d2c347894bcf54771",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gmp/6.3.0/2.fc41/riscv64/gmp-6.3.0-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "gnupg2-0__2.4.5-3.fc41.riscv64",
+    sha256 = "e9894f1ffc6de82aa968e887d585ce6510d3ef6bd805a3d3e546a6a8bd55ff36",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gnupg2/2.4.5/3.fc41/riscv64/gnupg2-2.4.5-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "gnutls-0__3.8.7-1.fc41.riscv64",
+    sha256 = "67cc564fbcdf108ca9429443c775a3de9e346d61bd71618c0a504c363877cf0f",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gnutls/3.8.7/1.fc41/riscv64/gnutls-3.8.7-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "gperftools-libs-0__2.15-4.fc41.riscv64",
+    sha256 = "3de67004091848635d99f2b61fcbd3badb4e03eabce729fd53e7b4bbad21bcce",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gperftools/2.15/4.fc41/riscv64/gperftools-libs-2.15-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "gpgme-0__1.23.2-6.fc41.riscv64",
+    sha256 = "69bd5b67f6c4dfbf844b3445d2d0be9f7fba1a8fd2e2bee6664d105386a269d5",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gpgme/1.23.2/6.fc41/riscv64/gpgme-1.23.2-6.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "grep-0__3.11-9.fc41.riscv64",
+    sha256 = "464cfd46e9126aeb017f94f26483a0a518cd7491aac3bef4b8ba5c8519483de6",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/grep/3.11/9.fc41/riscv64/grep-3.11-9.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "iptables-libs-0__1.8.10-15.fc41.riscv64",
+    sha256 = "136791b7a45cf9c4f66918ab1b8894097c808b3cb9cf50eb5e4a3a56017153df",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/iptables/1.8.10/15.fc41/riscv64/iptables-libs-1.8.10-15.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "jansson-0__2.13.1-10.fc41.riscv64",
+    sha256 = "eb80f92f54bed52547921fab469f5bcf99e829d7af5b90ff748994924629530b",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/jansson/2.13.1/10.fc41/riscv64/jansson-2.13.1-10.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "json-c-0__0.17-4.fc41.riscv64",
+    sha256 = "5bbef5ceda66611c582bd7371f90d19a60d6e5fa706a2b056335ca6c81d99d85",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/json-c/0.17/4.fc41/riscv64/json-c-0.17-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "keyutils-libs-0__1.6.3-4.fc41.riscv64",
+    sha256 = "f3b3be7838526036d4dded73c160114f41bd6cdc81691b3d45c58f3c4028fe0b",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/keyutils/1.6.3/4.fc41/riscv64/keyutils-libs-1.6.3-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "krb5-libs-0__1.21.3-3.fc41.riscv64",
+    sha256 = "9f672c6dcd63128e8c5d6205458bacd0d02023ddbbf8cd91f5744690eddb8627",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/krb5/1.21.3/3.fc41/riscv64/krb5-libs-1.21.3-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libacl-0__2.3.2-2.fc41.riscv64",
+    sha256 = "a573413df4f628fd2ac72cfb9351bcd68dff138bf5aa8b4ac454cd03a81d5cf3",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/acl/2.3.2/2.fc41/riscv64/libacl-2.3.2-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libaio-0__0.3.111-20.fc41.riscv64",
+    sha256 = "fabbe6dd598425bba30c461fb17d9e28c8ad1cd43820c54c20daab113dfbcc09",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libaio/0.3.111/20.fc41/riscv64/libaio-0.3.111-20.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libassuan-0__2.5.7-2.fc41.riscv64",
+    sha256 = "44eb32dad7e629a9dfbef39c713a7c5f24a64abcd84dec219a4c7e147fa78dcb",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libassuan/2.5.7/2.fc41/riscv64/libassuan-2.5.7-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libatomic-0__14.2.1-3.fc41.riscv64",
+    sha256 = "f6a3eb5bffa6cec6cb6d08c3b028446f40ecff5e01f2d3c8029a571a9644cec3",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gcc/14.2.1/3.fc41/riscv64/libatomic-14.2.1-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libattr-0__2.5.2-4.fc41.riscv64",
+    sha256 = "8b27b8a414fe18687911008cf1d6c77262774ac82499782200e52a2ac3e89814",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/attr/2.5.2/4.fc41/riscv64/libattr-2.5.2-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libb2-0__0.98.1-12.fc41.riscv64",
+    sha256 = "1c7ced3b7d07180d2b7f8fcc436b4fdccf3f7e14c8618359cf660ee6259b683d",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libb2/0.98.1/12.fc41/riscv64/libb2-0.98.1-12.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libblkid-0__2.40.2-4.fc41.riscv64",
+    sha256 = "1b0bc904b55a9787ec8a62ffa2b8db63ea5421eb7fb699b8db9e9c174c2eeec0",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/util-linux/2.40.2/4.fc41/riscv64/libblkid-2.40.2-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libbrotli-0__1.1.0-5.fc41.riscv64",
+    sha256 = "65a05247bdc5e099b18634f5b322f6d686d0d5eced729308e2690b6f70de0421",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/brotli/1.1.0/5.fc41/riscv64/libbrotli-1.1.0-5.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libcap-0__2.70-4.fc41.riscv64",
+    sha256 = "f5d9ddd213c85ff33bda31d3ddd8bc02324a6cac45644fca3b0299a5a325ed88",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libcap/2.70/4.fc41/riscv64/libcap-2.70-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libcap-ng-0__0.8.5-3.fc41.riscv64",
+    sha256 = "37364a8dbef40d21f0d7188f7d68be023998a7216ee944a76fbb266214565bab",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libcap-ng/0.8.5/3.fc41/riscv64/libcap-ng-0.8.5-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libcom_err-0__1.47.1-6.fc41.riscv64",
+    sha256 = "9c358735bfc524cb5c5edcef9d9d421af9e43a3fbadc52af0a4649eb16e33c62",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/e2fsprogs/1.47.1/6.fc41/riscv64/libcom_err-1.47.1-6.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libcurl-0__8.9.1-2.fc41.riscv64",
+    sha256 = "51a62172a9deb69e8848b90ffad9c483bc5e8ff761a22f34abf16c1ef3285ed5",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/curl/8.9.1/2.fc41/riscv64/libcurl-8.9.1-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libcurl-minimal-0__8.9.1-2.fc41.riscv64",
+    sha256 = "10c9a1058f08f052927529c7b5baf117408d5aa8b634f1f2458dd5e5be60a01c",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/curl/8.9.1/2.fc41/riscv64/libcurl-minimal-8.9.1-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libeconf-0__0.6.2-3.fc41.riscv64",
+    sha256 = "36d3bcb35ff30d3a60c336dec8fbf59f697cd4432ebdb1561d12482a91763698",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libeconf/0.6.2/3.fc41/riscv64/libeconf-0.6.2-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libedit-0__3.1-53.20240808cvs.fc41.riscv64",
+    sha256 = "cd1a74fde40482b8f2fb1faa9ba6d50854cf1d54c5ad60d861f526b5d0d5149a",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libedit/3.1/53.20240808cvs.fc41/riscv64/libedit-3.1-53.20240808cvs.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libevent-0__2.1.12-14.fc41.riscv64",
+    sha256 = "1fe14a08d2e63863fc669406bdacd0e9783774e5844fad61e5c6479bff3c4a4b",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libevent/2.1.12/14.fc41/riscv64/libevent-2.1.12-14.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libfdisk-0__2.40.2-4.fc41.riscv64",
+    sha256 = "ebe27b9c295ad44e0ad44514a78d4945dcb76743b4d942462688943d8ce09f89",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/util-linux/2.40.2/4.fc41/riscv64/libfdisk-2.40.2-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libffi-0__3.4.6-3.fc41.riscv64",
+    sha256 = "cc92b8aa88859410eafc60f6973f47b0316644d51efc06626ae0dba42075b4cd",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libffi/3.4.6/3.fc41/riscv64/libffi-3.4.6-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libgcc-0__14.2.1-3.fc41.riscv64",
+    sha256 = "e07f2d92bcc22ca497c568de187f31d8c8ea6350e227db84abc4d622c4abf01d",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gcc/14.2.1/3.fc41/riscv64/libgcc-14.2.1-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libgcrypt-0__1.11.0-3.fc41.riscv64",
+    sha256 = "6849f5b10a9aa45bade8aa630fd7050390917c433a4fa1ad699f16c3264ca04a",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libgcrypt/1.11.0/3.fc41/riscv64/libgcrypt-1.11.0-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libgomp-0__14.2.1-3.fc41.riscv64",
+    sha256 = "c812a49a0fe80fcd702e94665d01c290daa97ea11ef79780fb98ac2410a153e5",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gcc/14.2.1/3.fc41/riscv64/libgomp-14.2.1-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libgpg-error-0__1.50-2.fc41.riscv64",
+    sha256 = "bdd78c0bbcf10310593141eb947d52f73a00790fc0d7cac54d295526eea9e880",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libgpg-error/1.50/2.fc41/riscv64/libgpg-error-1.50-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libidn2-0__2.3.7-2.fc41.riscv64",
+    sha256 = "b657ce3a7bb85af42b36f94a5f2794f7a44630b174907a4f31a783b7f601e35e",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libidn2/2.3.7/2.fc41/riscv64/libidn2-2.3.7-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libksba-0__1.6.7-2.fc41.riscv64",
+    sha256 = "55a73ee795cc52cfff8472fc0f71f9bb2629b145ba8c243a9a08c843a96d2338",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libksba/1.6.7/2.fc41/riscv64/libksba-1.6.7-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libmnl-0__1.0.5-6.fc41.riscv64",
+    sha256 = "21c6aa8ffb671c86e1ab24d8b38a68a1221c49d8bccdb5e14ec688002fb6827d",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libmnl/1.0.5/6.fc41/riscv64/libmnl-1.0.5-6.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libmount-0__2.40.2-4.fc41.riscv64",
+    sha256 = "c8823a80bf7a5405af05401a48b502278a3565fb0ef8c17c7823eb82aaa0bd33",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/util-linux/2.40.2/4.fc41/riscv64/libmount-2.40.2-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libnetfilter_conntrack-0__1.0.9-6.fc41.riscv64",
+    sha256 = "25eaea75cbdcb6fe3cc2e954911ae72b9d3494fbb01bcaf90f5585972317652a",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libnetfilter_conntrack/1.0.9/6.fc41/riscv64/libnetfilter_conntrack-1.0.9-6.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libnfnetlink-0__1.0.1-28.fc41.riscv64",
+    sha256 = "267a7a6bd39a36f7e4266ec5ba5759053113129c8ad9c265393309b0353d38db",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libnfnetlink/1.0.1/28.fc41/riscv64/libnfnetlink-1.0.1-28.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libnftnl-0__1.2.7-2.fc41.riscv64",
+    sha256 = "43412ebbd5751d08a147a162022938ba5189b5224fd8e347d1afd7e7dbe66965",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libnftnl/1.2.7/2.fc41/riscv64/libnftnl-1.2.7-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libnghttp2-0__1.62.1-2.fc41.riscv64",
+    sha256 = "ea50c1b3d920585ed80e5598eae3e3be21d91060ed02766a30cd843876536192",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nghttp2/1.62.1/2.fc41/riscv64/libnghttp2-1.62.1-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libpsl-0__0.21.5-4.fc41.riscv64",
+    sha256 = "83fbf4a5090f7c032e2d551c4a481aecaeca25466d8b337488c63c1142c0f749",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libpsl/0.21.5/4.fc41/riscv64/libpsl-0.21.5-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libseccomp-0__2.5.5-2.fc41.riscv64",
+    sha256 = "ef8055690ac236725788aa57e048d0a0076b52660b9117fa926a0bfe4d555a5d",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libseccomp/2.5.5/2.fc41/riscv64/libseccomp-2.5.5-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libselinux-0__3.7-6.fc41.riscv64",
+    sha256 = "12c5612f5be7d015f9a03e3e6b185330d7f7195c5a917c4b3b5c10575930e8c4",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libselinux/3.7/6.fc41/riscv64/libselinux-3.7-6.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libsemanage-0__3.7-3.fc41.riscv64",
+    sha256 = "8ebcbffd03f4d253e61426265b88c87d87c79a4d5404cccd230a2baa0e614fa8",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libsemanage/3.7/3.fc41/riscv64/libsemanage-3.7-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libsepol-0__3.7-3.fc41.riscv64",
+    sha256 = "0a37908c5f71ea751304c9255279454aaa16d5954c27e3b05a2d4c825e8cd221",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libsepol/3.7/3.fc41/riscv64/libsepol-3.7-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libsmartcols-0__2.40.2-4.fc41.riscv64",
+    sha256 = "94492c8ebe0436e5695cc4e9df4589c0db4a091aba8773dd701447817c32da93",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/util-linux/2.40.2/4.fc41/riscv64/libsmartcols-2.40.2-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libssh-0__0.11.0-1.fc41.riscv64",
+    sha256 = "ff2cf67e8269e52072298fe7f9b8ce1c7424acb0638dd7ed84ac416d31d7a146",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libssh/0.11.0/1.fc41/riscv64/libssh-0.11.0-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libssh-config-0__0.11.0-1.fc41.noarch",
+    sha256 = "3103bcc0e076f6c0cefc7a3c69a783c4739360e5f07a56605fc4f4cf6dd652b1",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libssh/0.11.0/1.fc41/noarch/libssh-config-0.11.0-1.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "libstdc__plus____plus__-0__14.2.1-3.fc41.riscv64",
+    sha256 = "3c850e2f0d94a45a6ca1d88102fd2da304c49fdee5f4b55650e63d2fa705f86a",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/gcc/14.2.1/3.fc41/riscv64/libstdc++-14.2.1-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libtasn1-0__4.19.0-10.fc41.riscv64",
+    sha256 = "97165426537bdd7bc078b7ecbe6ea505bd43ea175ffadc5b3c11fb8630ed0ad2",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libtasn1/4.19.0/10.fc41/riscv64/libtasn1-4.19.0-10.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libtool-ltdl-0__2.4.7-10.1.riscv64.fc41.riscv64",
+    sha256 = "b0018f589dfb644b25ce2e4c4cfc21e1e9b3d70da719e7709e6de56de0795538",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libtool/2.4.7/10.1.riscv64.fc41/riscv64/libtool-ltdl-2.4.7-10.1.riscv64.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libunistring-0__1.1-8.fc41.riscv64",
+    sha256 = "1d3bea446977dc3f7ffa54d208ad060481520e2b2c81fa3ea6c5670ad96d328d",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libunistring/1.1/8.fc41/riscv64/libunistring-1.1-8.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libunwind-0__1.8.0-5.fc41.riscv64",
+    sha256 = "319385c71da97ea9059388239152fdf3c5fdd7b74f4820a32fd9853bb03ae6b8",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libunwind/1.8.0/5.fc41/riscv64/libunwind-1.8.0-5.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "liburing-0__2.6-2.fc41.riscv64",
+    sha256 = "2180c7ca8f71bf6f813f5ff9d20aebeca39b29e759c1c49769f37da661c9cdf1",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/liburing/2.6/2.fc41/riscv64/liburing-2.6-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libuuid-0__2.40.2-4.fc41.riscv64",
+    sha256 = "c209ffe88510642c43b2a8596ee2f5d01392b9aa18d9a5fca9d1f32d9c9d0e6e",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/util-linux/2.40.2/4.fc41/riscv64/libuuid-2.40.2-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libverto-0__0.3.2-9.fc41.riscv64",
+    sha256 = "32e34e18363bec0f98428dd21bae54c64355beb06bc933d5a459907f8e43d330",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libverto/0.3.2/9.fc41/riscv64/libverto-0.3.2-9.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libxcrypt-0__4.4.36-10.fc41.riscv64",
+    sha256 = "f90acdafd1aa0d871b6ea6e7c4b24f7ae0962df3d88371117ffc94d8750f5d9d",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libxcrypt/4.4.36/10.fc41/riscv64/libxcrypt-4.4.36-10.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libzstd-0__1.5.6-2.fc41.riscv64",
+    sha256 = "42d6c01dec0aef064e9a85f0e97353a70700227e1639aaa37d94af5af40820b8",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/zstd/1.5.6/2.fc41/riscv64/libzstd-1.5.6-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "mpdecimal-0__2.5.1-16.fc41.riscv64",
+    sha256 = "1f09936294d6f49cb99893e7bf4ea091c73a659c2af39f65e0313c581530ff0d",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/mpdecimal/2.5.1/16.fc41/riscv64/mpdecimal-2.5.1-16.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "mpfr-0__4.2.1-5.fc41.riscv64",
+    sha256 = "5304a39ada08f201e365f41bf9153f4e069c70ca320985571c1721eebbba4297",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/mpfr/4.2.1/5.fc41/riscv64/mpfr-4.2.1-5.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "ncurses-base-0__6.5-2.20240629.fc41.noarch",
+    sha256 = "edb982f88132ba0ecb9da7cefe0dbc56b8098360b9cc954cbe352e8902a54b0f",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/ncurses/6.5/2.20240629.fc41/noarch/ncurses-base-6.5-2.20240629.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "ncurses-libs-0__6.5-2.20240629.fc41.riscv64",
+    sha256 = "33b4354e428f4c800c1f2001eb77da4915f3c143bc53dc2a9ac14acdd78ba639",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/ncurses/6.5/2.20240629.fc41/riscv64/ncurses-libs-6.5-2.20240629.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "netavark-2__1.13.0-1.fc41.riscv64",
+    sha256 = "c355b650d67482587fcdf96987b0a26750994021397a058be3d9a6bc87842ca2",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/netavark/1.13.0/1.fc41/riscv64/netavark-1.13.0-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "nettle-0__3.10-3.fc41.riscv64",
+    sha256 = "a0f3100de9a0a4609e004dafdfcedc5b208d17c4d2efdb7d47bc9a907d8284f5",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nettle/3.10/3.fc41/riscv64/nettle-3.10-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "nftables-1__1.0.9-7.fc41.riscv64",
+    sha256 = "6cc5c6dc3961e5932387b53b34f56ca4524c41c0422a9d10e411d63bdc3636b5",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nftables/1.0.9/7.fc41/riscv64/nftables-1.0.9-7.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "nginx-2__1.26.2-1.fc41.riscv64",
+    sha256 = "48127f48fb50db392c7f3c436e528c5761f1186a37a0296c424b82b4fdeb64fd",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nginx/1.26.2/1.fc41/riscv64/nginx-1.26.2-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "nginx-core-2__1.26.2-1.fc41.riscv64",
+    sha256 = "82751b5f24e77ae8386dd8f73a3c8a8225f31a83617012da097027143ef8e5ea",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nginx/1.26.2/1.fc41/riscv64/nginx-core-1.26.2-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "nginx-filesystem-2__1.26.2-1.fc41.noarch",
+    sha256 = "64fc1f00ad657183a9c03f3ad72b8ac2b5aac54aaf9c8fae2723084bb784ed4c",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nginx/1.26.2/1.fc41/noarch/nginx-filesystem-1.26.2-1.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "nginx-mimetypes-0__2.1.54-7.fc41.noarch",
+    sha256 = "69aa59d78db2dc736d083f41899063c087239d76d4ae21b2151d344d6a69e447",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/mailcap/2.1.54/7.fc41/noarch/nginx-mimetypes-2.1.54-7.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "npth-0__1.7-2.fc41.riscv64",
+    sha256 = "672ff4feabb7655065b0b4de11fa4cbd8566b57b275065bf0d4d35c7f891673c",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/npth/1.7/2.fc41/riscv64/npth-1.7-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "numactl-libs-0__2.0.19-1.fc41.riscv64",
+    sha256 = "9e89399bb0b161c91b39e8c27c462662a45269be956dab624cbd42267dea11f5",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/numactl/2.0.19/1.fc41/riscv64/numactl-libs-2.0.19-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "openldap-0__2.6.8-5.fc41.riscv64",
+    sha256 = "83d1568424f2a9f7a96f4404d118578349593220fe606c689126ff7b8bec0278",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/openldap/2.6.8/5.fc41/riscv64/openldap-2.6.8-5.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "openssl-1__3.2.2-9.fc41.riscv64",
+    sha256 = "3db8424ccd3d6bef3c49ec253cb75429f08bc28d1147cff813e7507a5156e090",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/openssl/3.2.2/9.fc41/riscv64/openssl-3.2.2-9.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "openssl-libs-1__3.2.2-9.fc41.riscv64",
+    sha256 = "958122581b9b2313a716109aa5a0586d44e3e01165aea3ee99ad4254291fc64a",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/openssl/3.2.2/9.fc41/riscv64/openssl-libs-3.2.2-9.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "p11-kit-0__0.25.5-3.fc41.riscv64",
+    sha256 = "80382add0289d5df3fa47d1858caeb5ff07a8aabf4ab8a39267d596208cb26bb",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/p11-kit/0.25.5/3.fc41/riscv64/p11-kit-0.25.5-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "p11-kit-trust-0__0.25.5-3.fc41.riscv64",
+    sha256 = "0d29e5c38beb88b3b3ea7b1ea13f5f0bdcdbce0f01adb48f7d8679ac66f5380a",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/p11-kit/0.25.5/3.fc41/riscv64/p11-kit-trust-0.25.5-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "pam-libs-0__1.6.1-5.fc41.riscv64",
+    sha256 = "9caf0127b134469a68ce23b067867838acbd6b14e03aea216831cf8d33f1812d",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/pam/1.6.1/5.fc41/riscv64/pam-libs-1.6.1-5.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "passt-0__0-20241030.gee7d0b6-1.fc41.riscv64",
+    sha256 = "3e186b272e49ecb3c3b2d98e7143011a3c802bb5c35a6eb7724ee4177a468a3e",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/passt/0^20241030.gee7d0b6/1.fc41/riscv64/passt-0^20241030.gee7d0b6-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "pcre2-0__10.44-1.fc41.1.riscv64",
+    sha256 = "de254d3d6e092df92c12146a404a39a394ad6dba056b59ee5216058ea5c636cc",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/pcre2/10.44/1.fc41.1/riscv64/pcre2-10.44-1.fc41.1.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "pcre2-syntax-0__10.44-1.fc41.1.noarch",
+    sha256 = "f60bf5d33a74be6a035275db9101e38f096331ad1cd41ed345c358fbea1b4813",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/pcre2/10.44/1.fc41.1/noarch/pcre2-syntax-10.44-1.fc41.1.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "publicsuffix-list-dafsa-0__20240107-4.fc41.noarch",
+    sha256 = "e157f7470ed9edd31eba3d7164d1d4efd57f539b74b904a805fa9d5b2a586056",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/publicsuffix-list/20240107/4.fc41/noarch/publicsuffix-list-dafsa-20240107-4.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "python-pip-wheel-0__24.2-1.fc41.noarch",
+    sha256 = "ec8e52ebfc3b0fd870616898aa101a32369e2140ae81be55bc0aed9ae3b8d8de",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/python-pip/24.2/1.fc41/noarch/python-pip-wheel-24.2-1.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "python3-0__3.13.0-1.fc41.riscv64",
+    sha256 = "f1c29002ab8aecc6b79456bb38effcfa53b33c1c6bed1b58d78d4e6a8e71cc47",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/python3.13/3.13.0/1.fc41/riscv64/python3-3.13.0-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "python3-libs-0__3.13.0-1.fc41.riscv64",
+    sha256 = "44f7e6675512a019567aae6f8b12f1f4120e956cdc82aea2f64d35c766c68ad8",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/python3.13/3.13.0/1.fc41/riscv64/python3-libs-3.13.0-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "python3-systemd-0__235-11.fc41.riscv64",
+    sha256 = "d5d4b3c75a25cd966b650e61b7363474cecd267ead757ddba2403d2ff6920cf1",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/python-systemd/235/11.fc41/riscv64/python3-systemd-235-11.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "qemu-img-2__9.0.0-1.fc41.riscv64",
+    sha256 = "244f5db03234b31d4aede21b3bf65263b60419c997638595316adf4689686157",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/qemu/9.0.0/1.fc41/riscv64/qemu-img-9.0.0-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "readline-0__8.2-10.fc41.riscv64",
+    sha256 = "9bc149bc8b7cc9eca89b4d5138e9f7d0e99a957245f5889e3e42f74f5ac35f0e",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/readline/8.2/10.fc41/riscv64/readline-8.2-10.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "runc-2__1.2.1-1.fc41.riscv64",
+    sha256 = "3185a612ded60ff7e0f635bb129eb4aaa396dee47aebb57bccfcca8d849aa26f",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/runc/1.2.1/1.fc41/riscv64/runc-1.2.1-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "sed-0__4.9-3.fc41.riscv64",
+    sha256 = "df23537e0a45574aff495a978c7c5e2a2060dc61ab7e23e6488e467720021b1a",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/sed/4.9/3.fc41/riscv64/sed-4.9-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "setup-0__2.15.0-5.fc41.noarch",
+    sha256 = "210ca09542cfaa1f1d67b43eaf9b9db817f2ea7cea97e1cce68335c0666cf0da",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/setup/2.15.0/5.fc41/noarch/setup-2.15.0-5.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "shadow-utils-2__4.15.1-12.fc41.riscv64",
+    sha256 = "c50bbaa650f2eec70e693cd23d7877628a3ac90e1917ab9f512cc91ac688cbb9",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/shadow-utils/4.15.1/12.fc41/riscv64/shadow-utils-4.15.1-12.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "shadow-utils-subid-2__4.15.1-12.fc41.riscv64",
+    sha256 = "45d55609ec9c2c7fb1d282967c9627c00a281a3582d0c2918ff4804b281e0ece",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/shadow-utils/4.15.1/12.fc41/riscv64/shadow-utils-subid-4.15.1-12.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "sqlite-libs-0__3.46.1-1.fc41.riscv64",
+    sha256 = "fdbe691db12dbab6c9fafc66de5629a72185d61538f095f0c13e2334669854ac",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/sqlite/3.46.1/1.fc41/riscv64/sqlite-libs-3.46.1-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "systemd-0__256.8-1.fc41.riscv64",
+    sha256 = "6900272b22d35f953c8cae0cace2f14ca4a61c4b32c7417fa444d2f135505508",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/systemd/256.8/1.fc41/riscv64/systemd-256.8-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "systemd-libs-0__256.8-1.fc41.riscv64",
+    sha256 = "c14df011c5cf8e472916ecd8e9ea8584ce337d5c0c1cc43a457bd7b0b3ebc10a",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/systemd/256.8/1.fc41/riscv64/systemd-libs-256.8-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "systemd-pam-0__256.8-1.fc41.riscv64",
+    sha256 = "78ef17e8af1e1c33e9ecf5e5c59be873641c310b9c19cd6696e98ef1b8731109",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/systemd/256.8/1.fc41/riscv64/systemd-pam-256.8-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "tar-2__1.35-4.fc41.riscv64",
+    sha256 = "2a6a681befdc48d63e990528f2d7db0dbdce5838da1e821ef5fc94a7f45cfa34",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/tar/1.35/4.fc41/riscv64/tar-1.35-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "tpm2-tss-0__4.1.3-3.fc41.riscv64",
+    sha256 = "4c630cb2a7eed9a0f3c903576d0b99cc9b1f43cd968d5f0a3a10f80ee78b8988",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/tpm2-tss/4.1.3/3.fc41/riscv64/tpm2-tss-4.1.3-3.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "tzdata-0__2024a-9.fc41.noarch",
+    sha256 = "2a1650af9d1e8aaaeef3a8a11523c6962bf02df84ef27e7c74e5635f7be2998a",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/tzdata/2024a/9.fc41/noarch/tzdata-2024a-9.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "util-linux-core-0__2.40.2-4.fc41.riscv64",
+    sha256 = "c03ab965cba13e7f400d22c2c1e1fd3c8ed4915f2eb93785c50cb4d6321428f0",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/util-linux/2.40.2/4.fc41/riscv64/util-linux-core-2.40.2-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "vim-data-2__9.1.825-1.fc41.noarch",
+    sha256 = "df33456adc4ca79e3d9984a74b55c3e18760972ae32b67ed197aef996e7ae692",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/vim/9.1.825/1.fc41/noarch/vim-data-9.1.825-1.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "vim-minimal-2__9.1.825-1.fc41.riscv64",
+    sha256 = "47fb20ee904fbe0d348b9e16f68424f9681afc1396c8a17fc9b22de32f57aef4",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/vim/9.1.825/1.fc41/riscv64/vim-minimal-9.1.825-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "xz-libs-1__5.6.3-1.fc41.riscv64",
+    sha256 = "4e3df148bdadd9c1488e1fb5c200924ae89965adee4c65fe0c7e1f84c9c084ec",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/xz/5.6.3/1.fc41/riscv64/xz-libs-5.6.3-1.fc41.riscv64.rpm"
     ],
 )
 
@@ -6030,6 +6003,100 @@ rpm(
     name = "zlib-ng-compat-0__2.1.7-3.fc41.riscv64",
     sha256 = "9683ece040bf5f8abfa24c6e440f7eaf031a2e21a83e0c4a149bca58d3cf6868",
     urls = [
-        "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/zlib-ng/2.1.7/3.fc41/riscv64/zlib-ng-compat-2.1.7-3.fc41.riscv64.rpm",
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/zlib-ng/2.1.7/3.fc41/riscv64/zlib-ng-compat-2.1.7-3.fc41.riscv64.rpm"
     ],
 )
+rpm(
+    name = "libnbd-0__1.21.6-1.fc41.riscv64",
+    sha256 = "7651a235634acd1e539e2a7f23b970bc8eea7fc4251e267d48c1b34164f0896e",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libnbd/1.21.6/1.fc41/riscv64/libnbd-1.21.6-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "libxml2-0__2.12.8-2.fc41.riscv64",
+    sha256 = "04dce5350d1e6a81e9bac791d8284fe347f71615210403ae9edff07cf2e2d1af",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/libxml2/2.12.8/2.fc41/riscv64/libxml2-2.12.8-2.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "nbdkit-basic-filters-0__1.39.8-1.fc41.riscv64",
+    sha256 = "d8ff933c79de3e9db000790bf23043ec5f6e7a297eb30a7a161efc9379436404",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nbdkit/1.39.8/1.fc41/riscv64/nbdkit-basic-filters-1.39.8-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "nbdkit-curl-plugin-0__1.39.8-1.fc41.riscv64",
+    sha256 = "559e1e86aca26ff5a4436bfa23e0cfb145c4bd944bcba238d42d6896d39090b1",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nbdkit/1.39.8/1.fc41/riscv64/nbdkit-curl-plugin-1.39.8-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "nbdkit-gzip-filter-0__1.39.8-1.fc41.riscv64",
+    sha256 = "9214935356732fc729f74764b566ad0fc55f41a9e3309ce17e012cacc14edeed",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nbdkit/1.39.8/1.fc41/riscv64/nbdkit-gzip-filter-1.39.8-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "nbdkit-server-0__1.39.8-1.fc41.riscv64",
+    sha256 = "5c6e3e7f58c768b02a013475140b1a0b4251ed20e709551a5ec820dcd77f733f",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nbdkit/1.39.8/1.fc41/riscv64/nbdkit-server-1.39.8-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "nbdkit-xz-filter-0__1.39.8-1.fc41.riscv64",
+    sha256 = "6168ad6d9ce5f282c5b9f205b9d33baadf613d9a6177fa5b4c0567fb2a5a4a25",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/nbdkit/1.39.8/1.fc41/riscv64/nbdkit-xz-filter-1.39.8-1.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "python3-pycurl-0__7.45.3-4.fc41.riscv64",
+    sha256 = "f609105175ce027ab480b48bc745a5c14386892de4bbda9cf6789d92a2e63628",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/python-pycurl/7.45.3/4.fc41/riscv64/python3-pycurl-7.45.3-4.fc41.riscv64.rpm"
+    ],
+)
+
+rpm(
+    name = "python3-six-0__1.16.0-21.fc41.noarch",
+    sha256 = "c3cdcb87b62655355c7dfad43ce2967fd8632981bfc2c05a639ff34390a216d3",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/python-six/1.16.0/21.fc41/noarch/python3-six-1.16.0-21.fc41.noarch.rpm"
+    ],
+)
+
+rpm(
+    name = "zlib-ng-0__2.1.7-3.fc41.riscv64",
+    sha256 = "bed28fc8a5717c98f23fe9fadc13b886a0cd85f86e08250016a97c80045d5076",
+    urls = [
+       "https://openkoji.iscas.ac.cn/kojifiles/repos/f41-build/latest/riscv64/toplink/packages/zlib-ng/2.1.7/3.fc41/riscv64/zlib-ng-2.1.7-3.fc41.riscv64.rpm"
+    ],
+)
+
+
+
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+http_archive(
+    name = "rules_pkg",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.9.1/rules_pkg-0.9.1.tar.gz",
+        "https://github.com/bazelbuild/rules_pkg/releases/download/0.9.1/rules_pkg-0.9.1.tar.gz",
+    ],
+    sha256 = "8f9ee2dc10c1ae514ee599a8b42ed99fa262b757058f65ad3c384289ff70c4b8",
+)
+load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
+rules_pkg_dependencies()
