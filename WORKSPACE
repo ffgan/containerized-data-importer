@@ -235,6 +235,12 @@ http_file(
 )
 
 http_file(
+    name = "ovirt-imageio-client-riscv64",
+    sha256 = "2cab3d0e4d09544d67fa27c307c166424d9b5d04e871670aa8002c2cc33b92d2",
+    urls = ["https://github.com/ffgan/ovirt-imageio/raw/refs/heads/rv64-artifact/ovirt-imageio-client-2.5.2-0.202511231132.git1090456.fc41.riscv64.rpm"],
+)
+
+http_file(
     name = "ovirt-imageio-common",
     sha256 = "d6562eb701afcbde7ab1f14e1cc5f3a8be3ecc7fa25b9f3b831e342c3e14bc2a",
     urls = ["https://storage.googleapis.com/builddeps/d6562eb701afcbde7ab1f14e1cc5f3a8be3ecc7fa25b9f3b831e342c3e14bc2a"],
@@ -247,6 +253,12 @@ http_file(
 )
 
 http_file(
+    name = "ovirt-imageio-common-riscv64",
+    sha256 = "5b302c42a2a5e6f215f0a611f48ec64d694a72438415e4290d247a650392596e",
+    urls = ["https://github.com/ffgan/ovirt-imageio/raw/refs/heads/rv64-artifact/ovirt-imageio-common-2.5.2-0.202511231132.git1090456.fc41.riscv64.rpm"],
+)
+
+http_file(
     name = "ovirt-imageio-daemon",
     sha256 = "e0df3d43109769d2745a0d2befc05db8961b7de770047adf8ad60469d6e430f0",
     urls = ["https://storage.googleapis.com/builddeps/e0df3d43109769d2745a0d2befc05db8961b7de770047adf8ad60469d6e430f0"],
@@ -256,6 +268,12 @@ http_file(
     name = "ovirt-imageio-daemon-aarch64",
     sha256 = "5a6697a4fd9c8d52a8a9ead8a4281b3d208df221e0d87f4377e7a3f6a3a1608d",
     urls = ["https://storage.googleapis.com/builddeps/5a6697a4fd9c8d52a8a9ead8a4281b3d208df221e0d87f4377e7a3f6a3a1608d"],
+)
+
+http_file(
+    name = "ovirt-imageio-daemon-riscv64",
+    sha256 = "3c866bf52d88768140328d81b46220c5406c6681d4a5363f95b93d18c1e1164f",
+    urls = ["https://github.com/ffgan/ovirt-imageio/raw/refs/heads/rv64-artifact/ovirt-imageio-daemon-2.5.2-0.202511231132.git1090456.fc41.riscv64.rpm"],
 )
 
 rpm(
@@ -3768,6 +3786,15 @@ rpm(
     ],
 )
 
+
+rpm(
+    name = "ovirt-imageio-client-0__2.5.2-0.202511231132.git1090456.fc41.riscv64",
+    sha256 = "2cab3d0e4d09544d67fa27c307c166424d9b5d04e871670aa8002c2cc33b92d2",
+    urls = [
+        "https://github.com/ffgan/ovirt-imageio/raw/refs/heads/rv64-artifact/ovirt-imageio-client-2.5.2-0.202511231132.git1090456.fc41.riscv64.rpm",
+    ],
+)
+
 rpm(
     name = "ovirt-imageio-client-0__2.5.1-0.202505141115.git4cde810.el9.x86_64",
     sha256 = "431b16e8b62d473e19cdc0a2fa57467ae183d5b3004dd1ee3f3df4de9a888f3e",
@@ -3780,6 +3807,15 @@ rpm(
     urls = [
         "https://mirror.stream.centos.org/SIGs/9-stream/virt/aarch64/ovirt-45/Packages/o/ovirt-imageio-common-2.5.0-1.el9.aarch64.rpm",
         "https://storage.googleapis.com/builddeps/c019c42107de69e37331ea0493225e1eb5ffd55d70b45551b7d1b5456d2bdcfa",
+    ],
+)
+
+
+rpm(
+    name = "ovirt-imageio-common-0__2.5.2-0.202511231132.git1090456.fc41.riscv64",
+    sha256 = "5b302c42a2a5e6f215f0a611f48ec64d694a72438415e4290d247a650392596e",
+    urls = [
+        "https://github.com/ffgan/ovirt-imageio/raw/refs/heads/rv64-artifact/ovirt-imageio-common-2.5.2-0.202511231132.git1090456.fc41.riscv64.rpm",
     ],
 )
 

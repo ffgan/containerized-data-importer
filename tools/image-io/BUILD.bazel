@@ -19,6 +19,11 @@ rpm_image(
             "@ovirt-imageio-common-aarch64//file",
             "@ovirt-imageio-daemon-aarch64//file",
         ],
+        "@io_bazel_rules_go//go/platform:linux_riscv64": [
+            "@ovirt-imageio-client-riscv64//file",
+            "@ovirt-imageio-common-riscv64//file",
+            "@ovirt-imageio-daemon-riscv64//file",
+        ],
         "//conditions:default": [
             "@ovirt-imageio-client//file",
             "@ovirt-imageio-common//file",

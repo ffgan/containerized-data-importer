@@ -1630,6 +1630,8 @@ rpmtree(
       "@numactl-libs-0__2.0.19-1.fc41.riscv64//rpm",
       "@openldap-0__2.6.8-5.fc41.riscv64//rpm",
       "@openssl-libs-1__3.2.2-9.fc41.riscv64//rpm",
+      "@ovirt-imageio-client-0__2.5.2-0.202511231132.git1090456.fc41.riscv64//rpm",
+      "@ovirt-imageio-common-0__2.5.2-0.202511231132.git1090456.fc41.riscv64//rpm",
       "@p11-kit-0__0.25.5-3.fc41.riscv64//rpm",
       "@p11-kit-trust-0__0.25.5-3.fc41.riscv64//rpm",
       "@pam-libs-0__1.6.1-5.fc41.riscv64//rpm",
